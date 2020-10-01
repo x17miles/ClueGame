@@ -3,7 +3,7 @@ package experiment;
 
 import java.util.Collections;
 import java.util.Set;
-import java.util.TreeSet;
+import java.util.HashSet;
 
 
 public class TestBoardCell {
@@ -35,6 +35,10 @@ public class TestBoardCell {
 		this.col = col;
 	}
 
-	public Set<TestBoardCell> getAdjList();
+	public Set<TestBoardCell> getAdjList(){
+		adjList = new HashSet<TestBoardCell>();
+		adjList.add(this);
+		return adjList;
+	}
 	
 }

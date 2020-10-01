@@ -7,7 +7,7 @@ import java.util.Set;
 import org.junit.jupiter.api.*;
 
 class BoardTestsExp {
-	TestBoard board;
+	private TestBoard board;
 	
 	@BeforeEach
 	public void setUp() {
@@ -19,24 +19,30 @@ class BoardTestsExp {
 	 */
 	
 	@Test
-	public void testAdjacency() {
+	public void testTopLeftAdjacency() {
 		//top left
 		TestBoardCell cell = board.getCell(0, 0);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 0)));
 		assertTrue(testList.contains(board.getCell(0, 1)));
 		assertEquals(2, testList.size());
-		
+	}
+	
+	@Test
+	public void testBottomRightAdjacency() {
 		//bottom right
-		cell = board.getCell(4, 4);
-		testList = cell.getAdjList();
+		TestBoardCell cell = board.getCell(4, 4);
+		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(3, 4)));
 		assertTrue(testList.contains(board.getCell(4, 3)));
 		assertEquals(2, testList.size());
+	}
+	@Test
+	public void testEdges() {
 		
 		//right edge
-		cell = board.getCell(2, 4);
-		testList = cell.getAdjList();
+		TestBoardCell cell = board.getCell(2, 4);
+		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 4)));
 		assertTrue(testList.contains(board.getCell(2, 3)));
 		assertTrue(testList.contains(board.getCell(3, 4)));
@@ -49,10 +55,12 @@ class BoardTestsExp {
 		assertTrue(testList.contains(board.getCell(2, 0)));
 		assertTrue(testList.contains(board.getCell(4, 0)));
 		assertEquals(3, testList.size());
-		
+	}
+	@Test
+	public void testMiddle() {
 		//middle
-		cell = board.getCell(1, 1);
-		testList = cell.getAdjList();
+		TestBoardCell cell = board.getCell(1, 1);
+		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 0)));
 		assertTrue(testList.contains(board.getCell(0, 1)));
 		assertTrue(testList.contains(board.getCell(1, 2)));
