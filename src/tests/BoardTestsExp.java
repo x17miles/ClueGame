@@ -88,7 +88,7 @@ class BoardTestsExp {
 	}
 	
 	@Test
-	public void testCalcTarget() {
+	public void testCalcTargetTwoThree() {
 		//Test case for 3 movement
 		board.calcTargets(board.getCell(2,3), 3);
 		assertTrue(board.getTargets().contains(board.getCell(2, 2)));
@@ -101,7 +101,7 @@ class BoardTestsExp {
 	}
 	
 	@Test
-	public void testCalcTarget() {
+	public void testCalcTargetOneTwo() {
 		//Test case for 3 movement
 		board.calcTargets(board.getCell(1, 2), 3);
 		assertTrue(board.getTargets().contains(board.getCell(0, 0)));
@@ -122,6 +122,13 @@ class BoardTestsExp {
 		assertTrue(board.getTargets().contains(board.getCell(3, 3)));
 		assertTrue(board.getTargets().contains(board.getCell(0, 2)));
 		
+	}
+	@Test
+	public void testCalcOccupied() {
+		board.getCell(0, 0).setOccupied(true);
+		board.calcTargets(board.getCell(0, 2), 1);
+		assertFalse(board.getTargets().contains(board.getCell(0, 0)));
+		assertTrue(board.getTargets().contains(board.getCell(1,1)));
 	}
 	
 	
