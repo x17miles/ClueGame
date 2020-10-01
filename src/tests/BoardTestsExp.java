@@ -20,7 +20,7 @@ class BoardTestsExp {
 	
 	@Test
 	public void testTopLeftAdjacency() {
-		//top left
+		//test top left adjacency
 		TestBoardCell cell = board.getCell(0, 0);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 0)));
@@ -30,7 +30,7 @@ class BoardTestsExp {
 	
 	@Test
 	public void testBottomRightAdjacency() {
-		//bottom right
+		//test bottom right adjacency
 		TestBoardCell cell = board.getCell(4, 4);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(3, 4)));
@@ -40,7 +40,7 @@ class BoardTestsExp {
 	@Test
 	public void testEdges() {
 		
-		//right edge
+		//test right edge adjacency
 		TestBoardCell cell = board.getCell(2, 4);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 4)));
@@ -48,7 +48,7 @@ class BoardTestsExp {
 		assertTrue(testList.contains(board.getCell(3, 4)));
 		assertEquals(3, testList.size());
 		
-		//left edge
+		//test left edge adjacency
 		cell = board.getCell(3, 0);
 		testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(3, 1)));
@@ -58,7 +58,7 @@ class BoardTestsExp {
 	}
 	@Test
 	public void testMiddle() {
-		//middle
+		//test middle adjacency
 		TestBoardCell cell = board.getCell(1, 1);
 		Set<TestBoardCell> testList = cell.getAdjList();
 		assertTrue(testList.contains(board.getCell(1, 0)));
@@ -68,14 +68,36 @@ class BoardTestsExp {
 		assertEquals(4, testList.size());
 		
 	}
+	//END OF ADJACENCY TESTS
+	
+	
+	/*
+	 * Test targert calculations given the position of a piece and the setup of the board
+	 */
 	
 	@Test
-	public void testCalcTarget() {
+	public void testCalcTarget1Unit() {
 		//Test trivial upper left case
 		board.calcTargets(board.getCell(0, 0), 1);
 		assertTrue(board.getTargets().contains(board.getCell(0, 1)));
 		assertTrue(board.getTargets().contains(board.getCell(1, 0)));
 		
+		
+	}
+	
+	
+	@Test
+	public void testCalcTarget3Units() {
+		board.calcTargets(board.getCell(0, 0), 3);
+		assertTrue(board.getTargets().contains(board.getCell(3, 0)));
+		assertTrue(board.getTargets().contains(board.getCell(2, 1)));
+		
+	}
+	@Test
+	public void testCalcTarget6Units() {
+		board.calcTargets(board.getCell(0, 0), 6);
+		assertTrue(board.getTargets().contains(board.getCell(3, 3)));
+		assertTrue(board.getTargets().contains(board.getCell(0, 2)));
 		
 	}
 	
