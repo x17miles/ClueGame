@@ -78,11 +78,34 @@ class BoardTestsExp {
 	@Test
 	public void testCalcTarget1Unit() {
 		//Test trivial upper left case
-		board.calcTargets(board.getCell(0, 0), 1);
+		board.calcTargets(board.getCell(0, 0), 3);
 		assertTrue(board.getTargets().contains(board.getCell(0, 1)));
 		assertTrue(board.getTargets().contains(board.getCell(1, 0)));
+		assertTrue(board.getTargets().contains(board.getCell(0, 3)));
+		assertTrue(board.getTargets().contains(board.getCell(3, 0)));
+		assertTrue(board.getTargets().contains(board.getCell(2, 1)));
+		assertTrue(board.getTargets().contains(board.getCell(1, 2)));
+	}
+	
+	@Test
+	public void testCalcTarget() {
+		//Test case for 3 movement
+		board.calcTargets(board.getCell(2,3), 3);
+		assertTrue(board.getTargets().contains(board.getCell(2, 2)));
+		assertTrue(board.getTargets().contains(board.getCell(3, 3)));
+		assertTrue(board.getTargets().contains(board.getCell(0, 2)));
+		assertTrue(board.getTargets().contains(board.getCell(1, 3)));
+		assertTrue(board.getTargets().contains(board.getCell(1, 1)));
+		assertTrue(board.getTargets().contains(board.getCell(3, 1)));
 		
-		
+	}
+	
+	@Test
+	public void testCalcTarget() {
+		//Test case for 3 movement
+		board.calcTargets(board.getCell(1, 2), 3);
+		assertTrue(board.getTargets().contains(board.getCell(0, 0)));
+		assertTrue(board.getTargets().contains(board.getCell(2, 0)));
 	}
 	
 	
