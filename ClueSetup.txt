@@ -1,0 +1,13 @@
+﻿//Rooms and room cards
+Room, Main Bridge, B
+Room, Warp Drive Room, A
+Room, Observatory, O
+Room, Greenhouse, G
+Room, Dimensional Research, D
+Room, Medical, M
+Room, Kitchen, K
+Room, Teleporter, T
+Room, Sleeping Quarters, Q
+//Other spaces on board
+Space, Unused, X
+Space, Unused, W
