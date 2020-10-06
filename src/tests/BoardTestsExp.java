@@ -133,6 +133,12 @@ class BoardTestsExp {
 		assertTrue(board.getTargets().contains(board.getCell(1,1)));
 	}
 	
-	
+	@Test
+	public void testCalcRoom() {
+		board.getCell(0, 1).setInRoom(true);
+		board.calcTargets(board.getCell(0, 0),2);
+		assertTrue(board.getTargets().contains(board.getCell(1, 1)));
+		assertFalse(board.getTargets().contains(board.getCell(0, 2)));
+	}
 
 }
