@@ -35,6 +35,7 @@ public class TestBoardCell {
 	
 	
 	public TestBoardCell(int row, int col) {
+		//initialize row and column and make the adjList an empty set for the moment
 		super();
 		this.row = row;
 		this.col = col;

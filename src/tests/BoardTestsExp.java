@@ -27,7 +27,6 @@ class BoardTestsExp {
 		assertTrue(testList.contains(board.getCell(0, 1)));
 		assertEquals(2, testList.size());
 	}
-	
 	@Test
 	public void testBottomRightAdjacency() {
 		//test bottom right adjacency
@@ -72,7 +71,7 @@ class BoardTestsExp {
 	
 	
 	/*
-	 * Test targert calculations given the position of a piece and the setup of the board
+	 * Test target calculations given the position of a piece and the setup of the board for multiple locations
 	 */
 	
 	@Test
@@ -111,6 +110,7 @@ class BoardTestsExp {
 	
 	@Test
 	public void testCalcTarget3Units() {
+		//Another general calculation with 3 units
 		board.calcTargets(board.getCell(0, 0), 3);
 		assertTrue(board.getTargets().contains(board.getCell(3, 0)));
 		assertTrue(board.getTargets().contains(board.getCell(2, 1)));
@@ -118,6 +118,7 @@ class BoardTestsExp {
 	}
 	@Test
 	public void testCalcTarget6Units() {
+		//calculation with 6 units
 		board.calcTargets(board.getCell(0, 0), 6);
 		assertTrue(board.getTargets().contains(board.getCell(3, 3)));
 		assertTrue(board.getTargets().contains(board.getCell(0, 2)));
@@ -125,6 +126,7 @@ class BoardTestsExp {
 	}
 	@Test
 	public void testCalcOccupied() {
+		//test to assure that an occupied space is not a target (when it otherwise would be)
 		board.getCell(0, 0).setOccupied(true);
 		board.calcTargets(board.getCell(0, 1), 1);
 		assertFalse(board.getTargets().contains(board.getCell(0, 0)));
