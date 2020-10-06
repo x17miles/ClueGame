@@ -140,5 +140,7 @@ class BoardTestsExp {
 		assertTrue(board.getTargets().contains(board.getCell(1, 1)));
 		assertFalse(board.getTargets().contains(board.getCell(0, 2)));
 	}
+	
+	//END OF TARGET CALCULATIONS
 
 }
