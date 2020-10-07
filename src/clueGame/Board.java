@@ -10,7 +10,28 @@ public class Board {
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character,Room> roomMap;
-	private static Board theInstance;
+	private static Board theInstance = new Board();
+	
+	public Room getRoom(BoardCell cell) {
+		return new Room();
+	}
+	
+	public int getNumRows(){
+		return this.numRows;
+	}
+	public int getNumColumns() {
+		return this.numColumns;
+	}
+	
+	public void setConfigFiles(String layout, String setup) {
+		this.layoutConfigFile = layout;
+		this.setupConfigFile = setup;
+	}
+	public Room getRoom(char c) {
+		//return roomMap.get(c);
+		//stub
+		return new Room();
+	}
 	
 	public void initialize(){
 	
@@ -28,6 +49,7 @@ public class Board {
 		
 	}
 	
+	//Singleton Design Pattern
 	private Board() {
 		super();
 	}
@@ -69,7 +91,9 @@ public class Board {
 	}
 	public BoardCell getCell(int row, int col) {
 		//just returning a new one, not correct, but it works
-		return grid[row][col];
+		//return grid[row][col];
+		//stubbed version
+		return new BoardCell(row,col);
 	}
 
 }
