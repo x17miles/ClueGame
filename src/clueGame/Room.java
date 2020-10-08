@@ -25,11 +25,11 @@ public class Room {
 
 	public Room(String name) {
 		super();
-		//stubs
 		this.name = name;
 		space = false;
-		centerCell = new BoardCell(0,0);
-		labelCell = new BoardCell(0,0);
+		//centerCell and label cell will be initialized by the board
+		centerCell = new BoardCell(0,0,'-');
+		labelCell = new BoardCell(0,0,'-');
 	}
 	
 	public String getName() {

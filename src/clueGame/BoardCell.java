@@ -45,7 +45,7 @@ public class BoardCell {
 	}
 	
 	public boolean isDoorway() {
-		//should be a stub, but easy enough to just write out the solution, if it isn't none, then it is a door
+		//if it isn't none, then it is a door
 		return !doorDirection.equals(DoorDirection.NONE);
 	}
 	public DoorDirection getDoorDirection() {
@@ -68,22 +68,6 @@ public class BoardCell {
 	}
 	public void addAdj(BoardCell cell) {
 		this.adjList.add(cell);
-	}
-	
-	//TEMPORARY, REMOVE ME
-	public BoardCell(int row, int col) {
-		//initialize row and column and make the adjList an empty set for the moment
-		super();
-		this.row = row;
-		this.col = col;
-		adjList = new HashSet<BoardCell>();
-		this.occupied = false;
-		this.inRoom = false;
-		//new stubs for full game, based on UML requirements
-		roomCenter = false;
-		roomLabel = false;
-		initial = '-';
-		doorDirection = DoorDirection.NONE;
 	}
 	
 	public BoardCell(int row, int col, char initial) {

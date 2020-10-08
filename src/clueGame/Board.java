@@ -31,13 +31,12 @@ public class Board {
 		this.layoutConfigFile = layout;
 		this.setupConfigFile = setup;
 	}
-	public Room getRoom(char c) {
-		//return roomMap.get(c);
-		//stub
-		return roomMap.get(c);
+	public Room getRoom(char initial) {
+		return roomMap.get(initial);
 	}
 	
 	public void initialize(){
+		//call load config files, if any bad config format exceptions are thrown, print out the error message
 		try {
 			loadConfigFiles();
 		}
@@ -54,6 +53,28 @@ public class Board {
 	
 	public void loadSetupConfig() throws BadConfigFormatException {
 		ArrayList<String[]> vals = new ArrayList<String[]>();
+		readSetupFile(vals);		
+		parseSetupFile(vals);	
+	}
+
+	private void parseSetupFile(ArrayList<String[]> vals) throws BadConfigFormatException {
+		this.roomMap = new HashMap<Character,Room>();
+		for (String[] line : vals) {
+			if(line[0].contains("//")) {
+				continue;
+			} else if (line[0].equals("Room") || line[0].equals("Space")) {
+				//set up room information here
+				this.roomMap.put(line[2].toCharArray()[0], new Room(line[1]));
+				if(line[0].equals("Space")) {
+					roomMap.get(line[2].toCharArray()[0]).setSpace(true);
+				}
+			} else {
+				throw new BadConfigFormatException("Improperly formatted setup config file");
+			}
+		}
+	}
+
+	private void readSetupFile(ArrayList<String[]> vals) throws BadConfigFormatException {
 		try {
 			FileReader reader = new FileReader("data/"+setupConfigFile);
 			Scanner in = new Scanner(reader);
@@ -68,38 +89,16 @@ public class Board {
 		catch(FileNotFoundException e) {
 			throw new BadConfigFormatException("Error: " + setupConfigFile + " not found.");
 		}
-		
-		this.roomMap = new HashMap<Character,Room>();
-		for (String[] line : vals) {
-			if(line[0].contains("//")) {
-				continue;
-			} else if (line[0].equals("Room") || line[0].equals("Space")) {
-				//set up room information here
-				this.roomMap.put(line[2].toCharArray()[0], new Room(line[1]));
-				if(line[0].equals("Space")) {
-					roomMap.get(line[2].toCharArray()[0]).setSpace(true);
-				}
-			} else {
-				throw new BadConfigFormatException("Improperly formatted setup config file");
-			}
-		}	
 	}
 	
 	public void loadLayoutConfig() throws BadConfigFormatException {
 		ArrayList<String[]> vals = new ArrayList<String[]>();
 		
-		try {
-			FileReader reader = new FileReader("data/"+layoutConfigFile);
-			Scanner in = new Scanner(reader);
-			while(in.hasNextLine()) {
-				String tmpString = in.nextLine();
-				vals.add(tmpString.split(","));
-			}
-			in.close();
-		}
-		catch(FileNotFoundException e) {
-			throw new BadConfigFormatException("Error " + layoutConfigFile + " file not found");
-		}
+		readLayoutFile(vals);
+		parseLayoutFile(vals);
+	}
+
+	private void parseLayoutFile(ArrayList<String[]> vals) throws BadConfigFormatException {
 		this.numColumns = vals.get(0).length;
 		this.numRows = vals.size();
 		grid = new BoardCell[vals.size()][vals.get(0).length];
@@ -151,6 +150,21 @@ public class Board {
 					throw new BadConfigFormatException("Error: Non standard rows, columns, or non-rectangular board shape");
 				}
 			}
+		}
+	}
+
+	private void readLayoutFile(ArrayList<String[]> vals) throws BadConfigFormatException {
+		try {
+			FileReader reader = new FileReader("data/"+layoutConfigFile);
+			Scanner in = new Scanner(reader);
+			while(in.hasNextLine()) {
+				String tmpString = in.nextLine();
+				vals.add(tmpString.split(","));
+			}
+			in.close();
+		}
+		catch(FileNotFoundException e) {
+			throw new BadConfigFormatException("Error " + layoutConfigFile + " file not found");
 		}
 	}
 	
