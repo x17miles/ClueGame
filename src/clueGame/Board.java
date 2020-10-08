@@ -1,5 +1,7 @@
 package clueGame;
 
+import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.util.*;
 
 public class Board {
@@ -10,6 +12,7 @@ public class Board {
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character,Room> roomMap;
+	
 	private static Board theInstance = new Board();
 	
 	public Room getRoom(BoardCell cell) {
@@ -37,16 +40,23 @@ public class Board {
 	
 	}
 	
-	public void loadConfigFiles() {
-		
+	public void loadConfigFiles() throws FileNotFoundException {
+		loadSetupConfig();
+		loadLayoutConfig();
 	}
 	
-	public void loadSetupConfig() {
-		
+	public void loadSetupConfig() throws FileNotFoundException {
+		ArrayList<ArrayList<String>> vals = new ArrayList<ArrayList<String>>();
+		FileReader reader = new FileReader(setupConfigFile);
+		Scanner in = new Scanner(reader);
+		while(in.hasNextLine()) {
+			String tmpString = in.nextLine();
+			vals.add(new ArrayList<String>(tmpString.split(",")));
+		}
 	}
 	
-	public void loadLayoutConfig() {
-		
+	public void loadLayoutConfig() throws FileNotFoundException {
+		FileReader reader = new FileReader(layoutConfigFile);
 	}
 	
 	//Singleton Design Pattern
