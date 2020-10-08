@@ -6,9 +6,9 @@ import java.io.PrintWriter;
 import java.util.*;
 
 public class Board {
-	private Set<BoardCell> targets;
+	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private BoardCell[][] grid;
-	private Set<BoardCell> visited;
+	private Set<BoardCell> visited = new HashSet<BoardCell>();
 	private int numRows,numColumns;
 	private String layoutConfigFile;
 	private String setupConfigFile;
@@ -222,6 +222,9 @@ public class Board {
 		//return grid[row][col];
 		//stubbed version
 		return grid[row][col];
+	}
+	public Set<BoardCell> getAdjList(int row, int col){
+		return grid[row][col].getAdjList();
 	}
 
 }
