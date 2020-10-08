@@ -4,13 +4,34 @@ public class Room {
 	private String name;
 	private BoardCell centerCell;
 	private BoardCell labelCell;
-	public Room() {
+	private boolean space;
+	
+	
+	public void setCenterCell(BoardCell centerCell) {
+		this.centerCell = centerCell;
+	}
+
+	public void setLabelCell(BoardCell labelCell) {
+		this.labelCell = labelCell;
+	}
+
+	public boolean isSpace() {
+		return space;
+	}
+
+	public void setSpace(boolean space) {
+		this.space = space;
+	}
+
+	public Room(String name) {
 		super();
 		//stubs
-		name = "";
+		this.name = name;
+		space = false;
 		centerCell = new BoardCell(0,0);
 		labelCell = new BoardCell(0,0);
 	}
+	
 	public String getName() {
 		return this.name;
 	}

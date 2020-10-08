@@ -15,6 +15,20 @@ public class BoardCell {
 	private DoorDirection doorDirection;
 	private Set<BoardCell> adjList;
 	
+	public void setSecretPassage(char c) {
+		this.secretPassage = c;
+	}
+	public void setRoomLabel(boolean t) {
+		this.roomLabel = t;
+	}
+	public void setRoomCenter(boolean t) {
+		this.roomCenter = t;
+	}
+	
+	public void setDoorway(DoorDirection d) {
+		this.doorDirection = d;
+	}
+	
 	public char getInitial() {
 		return initial;
 	}
@@ -55,8 +69,8 @@ public class BoardCell {
 	public void addAdj(BoardCell cell) {
 		this.adjList.add(cell);
 	}
-
 	
+	//TEMPORARY, REMOVE ME
 	public BoardCell(int row, int col) {
 		//initialize row and column and make the adjList an empty set for the moment
 		super();
@@ -69,6 +83,21 @@ public class BoardCell {
 		roomCenter = false;
 		roomLabel = false;
 		initial = '-';
+		doorDirection = DoorDirection.NONE;
+	}
+	
+	public BoardCell(int row, int col, char initial) {
+		//initialize row and column and make the adjList an empty set for the moment
+		super();
+		this.row = row;
+		this.col = col;
+		adjList = new HashSet<BoardCell>();
+		this.occupied = false;
+		this.inRoom = false;
+		//new stubs for full game, based on UML requirements
+		roomCenter = false;
+		roomLabel = false;
+		this.initial = initial;
 		doorDirection = DoorDirection.NONE;
 	}
 
