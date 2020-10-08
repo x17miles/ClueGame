@@ -2,6 +2,7 @@ package clueGame;
 
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.PrintWriter;
 import java.util.*;
 
 public class Board {
@@ -42,6 +43,14 @@ public class Board {
 		}
 		catch(BadConfigFormatException e) {
 			System.out.println(e.getMessage());
+			try {
+				PrintWriter outFile = new PrintWriter("errorLog.txt");
+				outFile.println(e.getMessage());
+				outFile.close();
+			} catch (FileNotFoundException e1) {
+				// TODO Auto-generated catch block
+				System.out.println("error creating error log");
+			}
 		}
 	}
 	
