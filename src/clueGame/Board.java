@@ -38,29 +38,37 @@ public class Board {
 	}
 	
 	public void initialize(){
-		loadConfigFiles();
+		try {
+			loadConfigFiles();
+		}
+		catch(BadConfigFormatException e) {
+			System.out.println(e.getMessage());
+		}
 	}
 	
-	public void loadConfigFiles() {
-		try {
+	public void loadConfigFiles() throws BadConfigFormatException {
 			loadSetupConfig();
 			loadLayoutConfig();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
 		
 	}
 	
-	public void loadSetupConfig() throws FileNotFoundException {
+	public void loadSetupConfig() throws BadConfigFormatException {
 		ArrayList<String[]> vals = new ArrayList<String[]>();
-		FileReader reader = new FileReader("data/"+setupConfigFile);
-		Scanner in = new Scanner(reader);
-		this.spaces = new HashMap<Character, Room>();
-		while(in.hasNextLine()) {
-			String tmpString = in.nextLine();
-			vals.add(tmpString.split(", "));
+		try {
+			FileReader reader = new FileReader("data/"+setupConfigFile);
+			Scanner in = new Scanner(reader);
+		
+			this.spaces = new HashMap<Character, Room>();
+			while(in.hasNextLine()) {
+				String tmpString = in.nextLine();
+				vals.add(tmpString.split(", "));
+			}
+			in.close();
 		}
+		catch(FileNotFoundException e) {
+			throw new BadConfigFormatException("Error: " + setupConfigFile + " not found.");
+		}
+		
 		this.roomMap = new HashMap<Character,Room>();
 		for (String[] line : vals) {
 			if(line[0].contains("//")) {
@@ -72,22 +80,25 @@ public class Board {
 					roomMap.get(line[2].toCharArray()[0]).setSpace(true);
 				}
 			} else {
-				//Throw an exception
+				throw new BadConfigFormatException("Improperly formatted setup config file");
 			}
-		}
-		
-		
-		in.close();
-		
+		}	
 	}
 	
-	public void loadLayoutConfig() throws FileNotFoundException {
+	public void loadLayoutConfig() throws BadConfigFormatException {
 		ArrayList<String[]> vals = new ArrayList<String[]>();
-		FileReader reader = new FileReader("data/"+layoutConfigFile);
-		Scanner in = new Scanner(reader);
-		while(in.hasNextLine()) {
-			String tmpString = in.nextLine();
-			vals.add(tmpString.split(","));
+		
+		try {
+			FileReader reader = new FileReader("data/"+layoutConfigFile);
+			Scanner in = new Scanner(reader);
+			while(in.hasNextLine()) {
+				String tmpString = in.nextLine();
+				vals.add(tmpString.split(","));
+			}
+			in.close();
+		}
+		catch(FileNotFoundException e) {
+			throw new BadConfigFormatException("Error " + layoutConfigFile + " file not found");
 		}
 		this.numColumns = vals.get(0).length;
 		this.numRows = vals.size();
@@ -95,51 +106,52 @@ public class Board {
 		//error handle in this loop if the size differs / invalid characters etc.
 		for (int i = 0; i<vals.size(); i++) {
 			for (int j = 0; j<vals.get(0).length; j++) {
-				//if cell isn't in setup files, then there is an issue
-				if(!roomMap.containsKey(vals.get(i)[j].charAt(0))) {
-					//throw exception
-				}
-				grid[i][j] = new BoardCell(i,j,vals.get(i)[j].charAt(0));
-				
-				//Handle multi-character cells, add appropriate info to the cell
-				String val = vals.get(i)[j];
-				if(val.length()>1) {
-					switch (val.charAt(1)) {
-					case '^':
-						grid[i][j].setDoorway(DoorDirection.UP);
-						break;
-					case '<':
-						grid[i][j].setDoorway(DoorDirection.LEFT);
-						break;
-					case 'v':
-						grid[i][j].setDoorway(DoorDirection.DOWN);
-						break;
-					case '>':
-						grid[i][j].setDoorway(DoorDirection.RIGHT);
-						break;
-					case '*':
-						grid[i][j].setRoomCenter(true);
-						roomMap.get(val.charAt(0)).setCenterCell(grid[i][j]);
-						break;
-					case '#':
-						grid[i][j].setRoomLabel(true);
-						roomMap.get(val.charAt(0)).setLabelCell(grid[i][j]);
-						break;
-					default:
-						//if the cell contains another room's initial, it is a secret passage, otherwise throw exception
-						if(roomMap.containsKey(val.charAt(1)) && !roomMap.get(val.charAt(1)).isSpace()) grid[i][j].setSecretPassage(val.charAt(1));
-						else {
-							//throw exception
-						}
-						break;
+				try {
+					//if cell isn't in setup files, then there is an issue
+					if(!roomMap.containsKey(vals.get(i)[j].charAt(0))) {
+						throw new BadConfigFormatException("Error: cell added with improper cell initial");
 					}
+					grid[i][j] = new BoardCell(i,j,vals.get(i)[j].charAt(0));
+					
+					//Handle multi-character cells, add appropriate info to the cell
+					String val = vals.get(i)[j];
+					if(val.length()>1) {
+						switch (val.charAt(1)) {
+						case '^':
+							grid[i][j].setDoorway(DoorDirection.UP);
+							break;
+						case '<':
+							grid[i][j].setDoorway(DoorDirection.LEFT);
+							break;
+						case 'v':
+							grid[i][j].setDoorway(DoorDirection.DOWN);
+							break;
+						case '>':
+							grid[i][j].setDoorway(DoorDirection.RIGHT);
+							break;
+						case '*':
+							grid[i][j].setRoomCenter(true);
+							roomMap.get(val.charAt(0)).setCenterCell(grid[i][j]);
+							break;
+						case '#':
+							grid[i][j].setRoomLabel(true);
+							roomMap.get(val.charAt(0)).setLabelCell(grid[i][j]);
+							break;
+						default:
+							//if the cell contains another room's initial, it is a secret passage, otherwise throw exception
+							if(roomMap.containsKey(val.charAt(1)) && !roomMap.get(val.charAt(1)).isSpace()) grid[i][j].setSecretPassage(val.charAt(1));
+							else {
+								throw new BadConfigFormatException("Error: Invalid secondary cell character");
+							}
+							break;
+						}
+					}
+				}
+				catch(ArrayIndexOutOfBoundsException e) {
+					throw new BadConfigFormatException("Error: Non standard rows, columns, or non-rectangular board shape");
 				}
 			}
 		}
-		
-		
-		
-		in.close();
 	}
 	
 	//Singleton Design Pattern
