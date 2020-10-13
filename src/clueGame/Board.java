@@ -105,6 +105,7 @@ public class Board {
 		
 		readLayoutFile(vals);
 		parseLayoutFile(vals);
+		loadAdjLists();
 	}
 
 	private void parseLayoutFile(ArrayList<String[]> vals) throws BadConfigFormatException {
@@ -174,6 +175,56 @@ public class Board {
 		}
 		catch(FileNotFoundException e) {
 			throw new BadConfigFormatException("Error " + layoutConfigFile + " file not found");
+		}
+	}
+	
+	private void loadAdjLists() {
+		for (int i = 0; i < this.numRows; i++) {
+			for (int j = 0; j < this.numColumns; j++) {
+				
+				//walkways
+				
+				if (roomMap.get(grid[i][j].getInitial()).getName().equals("Walkway")) {
+					//if directly adjacent rooms are walkways, add them
+					if(i >0 ) {
+						if (roomMap.get(grid[i-1][j].getInitial()).getName().equals("Walkway")) grid[i][j].addAdj(grid[i-1][j]);
+					} if (i < this.numRows -1) {
+						if (roomMap.get(grid[i+1][j].getInitial()).getName().equals("Walkway")) grid[i][j].addAdj(grid[i+1][j]);
+					} if(j >0 ) {
+						if (roomMap.get(grid[i][j-1].getInitial()).getName().equals("Walkway")) grid[i][j].addAdj(grid[i][j-1]);
+					} if (j < this.numColumns -1) {
+						if (roomMap.get(grid[i][j+1].getInitial()).getName().equals("Walkway")) grid[i][j].addAdj(grid[i][j+1]);
+					}
+					//if the room is a doorway, add the room center to its list and vise versa (thus taking care of room center adjacent doorways)
+					if(grid[i][j].isDoorway()) {
+						switch (grid[i][j].getDoorDirection()){
+						case UP:
+							grid[i][j].addAdj(roomMap.get(grid[i-1][j].getInitial()).getCenterCell());
+							roomMap.get(grid[i-1][j].getInitial()).getCenterCell().addAdj(grid[i][j]);
+							break;
+						case DOWN:
+							grid[i][j].addAdj(roomMap.get(grid[i+1][j].getInitial()).getCenterCell());
+							roomMap.get(grid[i+1][j].getInitial()).getCenterCell().addAdj(grid[i][j]);
+							break;
+						case LEFT:
+							grid[i][j].addAdj(roomMap.get(grid[i][j-1].getInitial()).getCenterCell());
+							roomMap.get(grid[i][j-1].getInitial()).getCenterCell().addAdj(grid[i][j]);
+							break;
+						case RIGHT:
+							grid[i][j].addAdj(roomMap.get(grid[i][j+1].getInitial()).getCenterCell());
+							roomMap.get(grid[i][j+1].getInitial()).getCenterCell().addAdj(grid[i][j]);
+							break;
+						case NONE:
+						default:
+							break;
+						}
+					}
+				} //The only other adjacencies are those of secret passages, so add those as well
+				
+				else if (grid[i][j].isSecret()) {
+					roomMap.get(grid[i][j].getInitial()).getCenterCell().addAdj(roomMap.get(grid[i][j].getSecretPassage()).getCenterCell());
+				}
+			}
 		}
 	}
 	

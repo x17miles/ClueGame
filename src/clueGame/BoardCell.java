@@ -8,6 +8,7 @@ public class BoardCell {
 	private int col;
 	private char initial;
 	private char secretPassage;
+	private boolean secret;
 	private boolean roomLabel;
 	private boolean roomCenter;
 	private boolean inRoom;
@@ -17,6 +18,10 @@ public class BoardCell {
 	
 	public void setSecretPassage(char c) {
 		this.secretPassage = c;
+		this.secret = true;
+	}
+	public boolean isSecret() {
+		return this.secret;
 	}
 	public void setRoomLabel(boolean t) {
 		this.roomLabel = t;
