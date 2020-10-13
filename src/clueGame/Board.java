@@ -264,7 +264,7 @@ public class Board {
 				else if (pathlength <1) {
 					return;
 				}
-				else {
+				else if (!i.isOccupied()){
 					//otherwise recursively find the next step
 					findTargets(i, pathlength-1);
 				}
