@@ -10,4 +10,4 @@ Room, Teleporter, T
 Room, Sleeping Quarters, Q
 //Other spaces on board
 Space, Unused, X
-Space, Unused, W
+Space, Walkway, W

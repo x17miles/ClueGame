@@ -100,16 +100,16 @@ private static Board board;
 	@Test
 	public void testAdjacencySecretPassage() {
 		//Assure the the main bridge links to the warp drive room
-		Set<BoardCell> testList = board.getAdjList(27, 11);
-		assertEquals(2, testList.size());
-		assertTrue(testList.contains(board.getCell(24, 9)));
-		assertTrue(testList.contains(board.getCell(2, 9)));
+		Set<BoardCell> testList = board.getAdjList(24, 9);
+		assertEquals(3, testList.size());
+		assertTrue(testList.contains(board.getCell(21, 7)));
+		assertTrue(testList.contains(board.getCell(5, 11)));
 		
 		//assure that dimensional research links to teleporter
-		testList = board.getAdjList(11, 21);
-		assertEquals(2, testList.size());
-		assertTrue(testList.contains(board.getCell(16, 17)));
-		assertTrue(testList.contains(board.getCell(8, 0)));
+		testList = board.getAdjList(16, 17);
+		assertEquals(3, testList.size());
+		assertTrue(testList.contains(board.getCell(10, 3)));
+		assertTrue(testList.contains(board.getCell(13, 18)));
 		
 	}
 	
@@ -153,7 +153,7 @@ private static Board board;
 		board.calcTargets(board.getCell(24, 9), 2);
 		Set<BoardCell> targets= board.getTargets();
 		assertTrue(targets.contains(board.getCell(5, 11)));
-		assertTrue(targets.contains(board.getCell(24, 16)));
+		assertTrue(targets.contains(board.getCell(21, 6)));
 		assertTrue(targets.contains(board.getCell(19, 13)));
 		
 	}
