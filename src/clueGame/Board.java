@@ -248,6 +248,7 @@ public class Board {
 	//private helper function to recursively call add targets
 	private void findTargets(BoardCell startCell, int pathlength) {
 		//iterate through each cell in the current cell's adjList
+		visited.add(startCell);
 		for(BoardCell i : startCell.getAdjList()) {
 			//if it is visited or a room, skip it
 			if (visited.contains(i) || i.isInRoom()) {
@@ -257,7 +258,13 @@ public class Board {
 				//if there is only one unit left to move and it isn't an occupied space, add it to targets
 				if (pathlength == 1 && !i.isOccupied()) {
 					targets.add(i);
-				} else {
+				} else if (i.isRoomCenter()) {
+					targets.add(i);
+				}
+				else if (pathlength <1) {
+					return;
+				}
+				else {
 					//otherwise recursively find the next step
 					findTargets(i, pathlength-1);
 				}
