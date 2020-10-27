@@ -94,29 +94,29 @@ public class Board {
 	}
 	
 	public void loadLayoutConfig() throws BadConfigFormatException {
-		ArrayList<String[]> vals = new ArrayList<String[]>();
+		ArrayList<String[]> layoutVals = new ArrayList<String[]>();
 		
-		readLayoutFile(vals);
-		parseLayoutFile(vals);
+		readLayoutFile(layoutVals);
+		parseLayoutFile(layoutVals);
 		loadAdjLists();
 	}
 
-	private void parseLayoutFile(ArrayList<String[]> vals) throws BadConfigFormatException {
-		this.numColumns = vals.get(0).length;
-		this.numRows = vals.size();
-		grid = new BoardCell[vals.size()][vals.get(0).length];
+	private void parseLayoutFile(ArrayList<String[]> layoutVals) throws BadConfigFormatException {
+		this.numColumns = layoutVals.get(0).length;
+		this.numRows = layoutVals.size();
+		grid = new BoardCell[layoutVals.size()][layoutVals.get(0).length];
 		//error handle in this loop if the size differs / invalid characters etc.
-		for (int i = 0; i<vals.size(); i++) {
-			for (int j = 0; j<vals.get(0).length; j++) {
+		for (int i = 0; i<layoutVals.size(); i++) {
+			for (int j = 0; j<layoutVals.get(0).length; j++) {
 				try {
 					//if cell isn't in setup files, then there is an issue
-					if(!roomMap.containsKey(vals.get(i)[j].charAt(0))) {
+					if(!roomMap.containsKey(layoutVals.get(i)[j].charAt(0))) {
 						throw new BadConfigFormatException("Error: cell added with improper cell initial");
 					}
-					grid[i][j] = new BoardCell(i,j,vals.get(i)[j].charAt(0));
+					grid[i][j] = new BoardCell(i,j,layoutVals.get(i)[j].charAt(0));
 					
 					//Handle multi-character cells, add appropriate info to the cell
-					String val = vals.get(i)[j];
+					String val = layoutVals.get(i)[j];
 					if(val.length()>1) {
 						switch (val.charAt(1)) {
 						case '^':
@@ -156,13 +156,13 @@ public class Board {
 		}
 	}
 
-	private void readLayoutFile(ArrayList<String[]> vals) throws BadConfigFormatException {
+	private void readLayoutFile(ArrayList<String[]> layoutVals) throws BadConfigFormatException {
 		try {
 			FileReader reader = new FileReader("data/"+layoutConfigFile);
 			Scanner in = new Scanner(reader);
 			while(in.hasNextLine()) {
 				String tmpString = in.nextLine();
-				vals.add(tmpString.split(","));
+				layoutVals.add(tmpString.split(","));
 			}
 			in.close();
 		}
