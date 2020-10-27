@@ -54,14 +54,14 @@ public class Board {
 	}
 	
 	public void loadSetupConfig() throws BadConfigFormatException {
-		ArrayList<String[]> vals = new ArrayList<String[]>();
-		readSetupFile(vals);		
-		parseSetupFile(vals);	
+		ArrayList<String[]> setupVals = new ArrayList<String[]>();
+		readSetupFile(setupVals);		
+		parseSetupFile(setupVals);	
 	}
 
-	private void parseSetupFile(ArrayList<String[]> vals) throws BadConfigFormatException {
+	private void parseSetupFile(ArrayList<String[]> setupVals) throws BadConfigFormatException {
 		this.roomMap = new HashMap<Character,Room>();
-		for (String[] line : vals) {
+		for (String[] line : setupVals) {
 			if(line[0].contains("//")) {
 				continue;
 			} else if (line[0].equals("Room") || line[0].equals("Space")) {
@@ -76,7 +76,7 @@ public class Board {
 		}
 	}
 
-	private void readSetupFile(ArrayList<String[]> vals) throws BadConfigFormatException {
+	private void readSetupFile(ArrayList<String[]> setupVals) throws BadConfigFormatException {
 		try {
 			FileReader reader = new FileReader("data/"+setupConfigFile);
 			Scanner in = new Scanner(reader);
@@ -84,7 +84,7 @@ public class Board {
 			this.spaces = new HashMap<Character, Room>();
 			while(in.hasNextLine()) {
 				String tmpString = in.nextLine();
-				vals.add(tmpString.split(", "));
+				setupVals.add(tmpString.split(", "));
 			}
 			in.close();
 		}
