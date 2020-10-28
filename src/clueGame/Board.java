@@ -153,7 +153,7 @@ public class Board {
 							//if the cell contains another room's initial, it is a secret passage, otherwise throw exception
 							if(roomMap.containsKey(val.charAt(1)) && !roomMap.get(val.charAt(1)).isSpace()) grid[i][j].setSecretPassage(val.charAt(1));
 							else {
-								throw new BadConfigFormatException("Error: Invalid secondary cell character");
+								throw new BadConfigFormatException("Error: Invalid secondary cell character " + val.charAt(1));
 							}
 							break;
 						}
