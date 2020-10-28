@@ -16,7 +16,11 @@ public class BoardCell {
 	private DoorDirection doorDirection;
 	private Set<BoardCell> adjList;
 	
-
+	/*
+	 * @param row - the row number of the cell, starting with 0
+	 * @param col - the column number of the cell, starting with 0
+	 * @param initial - the initial of the room/space that the cell exists in, e.g. O for Observatory
+	 */
 	public BoardCell(int row, int col, char initial) {
 		//initialize row and column and make the adjList an empty set for the moment
 		super();

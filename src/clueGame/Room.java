@@ -6,6 +6,9 @@ public class Room {
 	private BoardCell labelCell;
 	private boolean space;
 	
+	/*
+	 * @param name - what the name of the room is, e.g. Observatory
+	 */
 	public Room(String name) {
 		super();
 		this.name = name;
