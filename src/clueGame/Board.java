@@ -17,6 +17,25 @@ public class Board {
 	
 	private static Board theInstance = new Board();
 	
+	//Singleton Design Pattern
+	private Board() {
+		super();
+	}
+	
+	public static Board getInstance() {
+		return theInstance;
+	}
+	public void initialize(){
+		//call load config files, if any bad config format exceptions are thrown, print out the error message
+		try {
+			loadConfigFiles();
+		}
+		catch(BadConfigFormatException e) {
+			System.out.println(e.getMessage());
+			
+		}
+	}
+	
 	public Room getRoom(BoardCell cell) {
 		return roomMap.get(cell.getInitial());
 	}
@@ -36,16 +55,7 @@ public class Board {
 		return roomMap.get(initial);
 	}
 	
-	public void initialize(){
-		//call load config files, if any bad config format exceptions are thrown, print out the error message
-		try {
-			loadConfigFiles();
-		}
-		catch(BadConfigFormatException e) {
-			System.out.println(e.getMessage());
-			
-		}
-	}
+	
 	
 	public void loadConfigFiles() throws BadConfigFormatException {
 			loadSetupConfig();
@@ -221,14 +231,7 @@ public class Board {
 		}
 	}
 	
-	//Singleton Design Pattern
-	private Board() {
-		super();
-	}
 	
-	public static Board getInstance() {
-		return theInstance;
-	}
 	
 	public void calcTargets(BoardCell startCell, int pathlength) {
 		//clear out the targets and visited sets
