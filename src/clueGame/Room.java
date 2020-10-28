@@ -6,7 +6,14 @@ public class Room {
 	private BoardCell labelCell;
 	private boolean space;
 	
-	
+	public Room(String name) {
+		super();
+		this.name = name;
+		space = false;
+		//centerCell and label cell will be initialized by the board
+		centerCell = new BoardCell(0,0,'-');
+		labelCell = new BoardCell(0,0,'-');
+	}
 	public void setCenterCell(BoardCell centerCell) {
 		this.centerCell = centerCell;
 	}
@@ -15,21 +22,8 @@ public class Room {
 		this.labelCell = labelCell;
 	}
 
-	public boolean isSpace() {
-		return space;
-	}
-
 	public void setSpace(boolean space) {
 		this.space = space;
-	}
-
-	public Room(String name) {
-		super();
-		this.name = name;
-		space = false;
-		//centerCell and label cell will be initialized by the board
-		centerCell = new BoardCell(0,0,'-');
-		labelCell = new BoardCell(0,0,'-');
 	}
 	
 	public String getName() {
@@ -40,5 +34,8 @@ public class Room {
 	}
 	public BoardCell getCenterCell() {
 		return centerCell;
+	}
+	public boolean isSpace() {
+		return space;
 	}
 }
