@@ -14,6 +14,8 @@ public class Board {
 	private String setupConfigFile;
 	private Map<Character,Room> roomMap;
 	private Map<Character,Room> spaces;
+	private Set<Player> players;
+	private Set<Card> weapons;
 	
 	private static Board theInstance = new Board();
 	
@@ -34,6 +36,14 @@ public class Board {
 			System.out.println(e.getMessage());
 			
 		}
+	}
+	
+	public void deal() {
+		//stub
+	}
+	
+	public Set<Player> getPlayers(){
+		return this.players;
 	}
 	
 	public Room getRoom(BoardCell cell) {
@@ -71,6 +81,8 @@ public class Board {
 
 	private void parseSetupFile(ArrayList<String[]> setupVals) throws BadConfigFormatException {
 		this.roomMap = new HashMap<Character,Room>();
+		this.players = new HashSet<Player>();
+		this.weapons = new HashSet<Card>();
 		for (String[] line : setupVals) {
 			if(line[0].contains("//")) {
 				continue;
@@ -80,7 +92,26 @@ public class Board {
 				if(line[0].equals("Space")) {
 					roomMap.get(line[2].toCharArray()[0]).setSpace(true);
 				}
-			} else {
+			} else if(line[0].equals("Player")){
+				if(line[1].equals("Jimbothy")) {
+					int[] location = new int[2];
+					location[0] = Integer.parseInt(line[3]);
+					location[1] = Integer.parseInt(line[4]);
+					players.add(new HumanPlayer(line[1], location, line[2]));
+				}
+				else {
+					int[] location = new int[2];
+					location[0] = Integer.parseInt(line[3]);
+					location[1] = Integer.parseInt(line[4]);
+					players.add(new ComputerPlayer(line[1], location, line[2]));
+				}
+				
+			} else if(line[0].equals("Weapon")) {
+				weapons.add(new Card(line[1], CardType.WEAPON));
+			}
+			
+			
+			else {
 				throw new BadConfigFormatException("Improperly formatted setup config file");
 			}
 		}

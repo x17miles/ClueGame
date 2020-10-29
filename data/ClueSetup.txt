@@ -11,3 +11,17 @@ Room, Sleeping Quarters, Q
 //Other spaces on board
 Space, Unused, X
 Space, Walkway, W
+//Players
+Player, Captain, Blue, 28, 9
+Player, Cook, Green, 21, 0
+Player, Doctor, White, 0, 6
+Player, Engineer, Yellow, 0, 16
+Player, Mercenary, Black, 21, 21
+Player, Jimbothy, Red, 13, 1
+//Weapons
+Weapon, Phaser
+Weapon, Portal to Vogon
+Weapon, Light-Saber
+Weapon, Blow Torch
+Weapon, Space Hammer
+Weapon, RayGun
