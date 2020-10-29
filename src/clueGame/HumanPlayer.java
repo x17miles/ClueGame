@@ -6,11 +6,5 @@ public class HumanPlayer extends Player {
 		super(name, startingLocation, color);
 		// TODO Auto-generated constructor stub
 	}
-
-	@Override
-	void updateHand() {
-		// TODO Auto-generated method stub
-		
-	}
 	
 }

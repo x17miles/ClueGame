@@ -1,16 +1,19 @@
 package clueGame;
 
+import java.util.ArrayList;
+
 public abstract class Player {
 	private String name;
 	private int[] startingLocation;
 	private String color;
-	private Card[] hand;
+	private ArrayList<Card> hand;
 	
 	public Player(String name, int[] startingLocation, String color) {
 		super();
 		this.name = name;
 		this.startingLocation = startingLocation;
 		this.color = color;
+		this.hand = new ArrayList<Card>();
 	}
 	
 	public String getName() {
@@ -31,6 +34,20 @@ public abstract class Player {
 	public void setColor(String color) {
 		this.color = color;
 	}
+	public ArrayList<Card> getHand(){
+		return this.hand;
+	}
 	
-	abstract void updateHand();
+	//overide of equals function
+	@Override
+	public boolean equals(Object obj) {
+		if(obj == null || obj.getClass() != this.getClass()) return false;
+		Player target = (Player) obj;
+		if(target.name.equals(this.name) && target.color.equals(this.color)) return true;
+		return false;
+	}
+
+	void updateHand(Card card) {
+		this.hand.add(card);
+	}
 }

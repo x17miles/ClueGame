@@ -12,12 +12,12 @@ Room, Sleeping Quarters, Q
 Space, Unused, X
 Space, Walkway, W
 //Players
-Player, Captain, Blue, 28, 9
-Player, Cook, Green, 21, 0
-Player, Doctor, White, 0, 6
-Player, Engineer, Yellow, 0, 16
-Player, Mercenary, Black, 21, 21
-Player, Jimbothy, Red, 13, 1
+Player, Captain, Blue, 28, 9, Computer
+Player, Cook, Green, 21, 0, Computer
+Player, Doctor, White, 0, 6, Computer
+Player, Engineer, Yellow, 0, 16, Computer
+Player, Mercenary, Black, 21, 21, Computer
+Player, Jimbothy, Red, 13, 1, Human
 //Weapons
 Weapon, Phaser
 Weapon, Portal to Vogon

@@ -13,10 +13,11 @@ public class Board {
 	private String layoutConfigFile;
 	private String setupConfigFile;
 	private Map<Character,Room> roomMap;
-	private Map<Character,Room> spaces;
 	private Set<Player> players;
 	private Set<Card> weapons;
-	
+	private Set<Card> deck;
+	private Set<Card> dealableCards;
+	private Solution solution;
 	private static Board theInstance = new Board();
 	
 	//Singleton Design Pattern
@@ -37,13 +38,101 @@ public class Board {
 			
 		}
 	}
+	public Solution getSolution() {
+		return this.solution;
+	}
+	
+	public void makeDeck() {
+		//First, go through rooms and players and create a card set for each of them
+		Set<Card> RoomCards = new HashSet<Card>();
+		for(Character i : roomMap.keySet()) {
+			if(!roomMap.get(i).isSpace())
+				RoomCards.add(new Card(roomMap.get(i).getName(), CardType.ROOM));
+		}
+		Set<Card> playerCards = new HashSet<Card>();
+		for (Player i : players) {
+			playerCards.add(new Card(i.getName(), CardType.PERSON));
+		}
+		
+		//initialize the deck with the newly created card sets
+		this.deck = new HashSet<Card>();
+		deck.addAll(RoomCards);
+		deck.addAll(playerCards);
+		deck.addAll(weapons);
+		
+		//remove a random card from each set to be part of the solution
+		Random r = new Random();
+		Card[] solutionCards = new Card[3];
+		int counter = r.nextInt(RoomCards.size());
+		for(Card i : RoomCards) {
+			if(counter == 0) {
+				solutionCards[0] = i;
+				RoomCards.remove(i);
+				break;
+			}
+			counter--;
+		}
+		counter = r.nextInt(playerCards.size());
+		for(Card i : playerCards) {
+			if(counter == 0) {
+				solutionCards[1] = i;
+				playerCards.remove(i);
+				break;
+			}
+			counter--;
+		}
+		counter = r.nextInt(weapons.size());
+		for(Card i : weapons) {
+			if(counter ==0) {
+				solutionCards[2] = i;
+				weapons.remove(i);
+				break;
+			}
+			counter--;
+		}
+		
+		this.solution = new Solution(solutionCards[1],solutionCards[0],solutionCards[2]);
+		
+		//dealable cards should be the leftovers after creating the solution
+		this.dealableCards = new HashSet<Card>();
+		dealableCards.addAll(RoomCards);
+		dealableCards.addAll(playerCards);
+		dealableCards.addAll(weapons);
+	}
+	public void dealHands() {
+		//initialize a 2d array list to store the hands
+		ArrayList<ArrayList<Card>> hands = new ArrayList<ArrayList<Card>>();
+		for(int i = 0; i<players.size(); i++) {
+			hands.add(new ArrayList<Card>());
+		}
+		//loop through all of the dealable cards and add it to a hand, looping back once
+		// everyone has the same number of cards
+		int handCounter = 1;
+		for(Card c : dealableCards) {
+			hands.get(handCounter-1).add(c);
+			handCounter ++;
+			if(handCounter > players.size()) handCounter=1;
+		}
+		//update the hands of each player
+		int counter = 0;
+		for(Player p : players) {
+			for(Card i:hands.get(counter)) {
+				p.updateHand(i);
+			}
+			counter ++;
+		}
+	}
 	
 	public void deal() {
-		//stub
+		makeDeck();
+		dealHands();
 	}
 	
 	public Set<Player> getPlayers(){
 		return this.players;
+	}
+	public Set<Card> getWeapons(){
+		return this.weapons;
 	}
 	
 	public Room getRoom(BoardCell cell) {
@@ -92,8 +181,10 @@ public class Board {
 				if(line[0].equals("Space")) {
 					roomMap.get(line[2].toCharArray()[0]).setSpace(true);
 				}
+				
+				//add new players to the board's player list, differentiate between the human child and the computer child of Player
 			} else if(line[0].equals("Player")){
-				if(line[1].equals("Jimbothy")) {
+				if(line[5].equals("Human")) {
 					int[] location = new int[2];
 					location[0] = Integer.parseInt(line[3]);
 					location[1] = Integer.parseInt(line[4]);
@@ -105,12 +196,12 @@ public class Board {
 					location[1] = Integer.parseInt(line[4]);
 					players.add(new ComputerPlayer(line[1], location, line[2]));
 				}
-				
+			//if it is a weapon, add it to the weapons cards	
 			} else if(line[0].equals("Weapon")) {
 				weapons.add(new Card(line[1], CardType.WEAPON));
 			}
 			
-			
+			//otherwise there is an error, and an exception should be thrown
 			else {
 				throw new BadConfigFormatException("Improperly formatted setup config file");
 			}
@@ -121,8 +212,6 @@ public class Board {
 		try {
 			FileReader reader = new FileReader("data/"+setupConfigFile);
 			Scanner in = new Scanner(reader);
-		
-			this.spaces = new HashMap<Character, Room>();
 			while(in.hasNextLine()) {
 				String tmpString = in.nextLine();
 				setupVals.add(tmpString.split(", "));
