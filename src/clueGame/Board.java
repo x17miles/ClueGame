@@ -61,6 +61,10 @@ public class Board {
 		deck.addAll(weapons);
 		
 		//remove a random card from each set to be part of the solution
+		buildSolution(RoomCards, playerCards);
+	}
+
+	private void buildSolution(Set<Card> RoomCards, Set<Card> playerCards) {
 		Random r = new Random();
 		Card[] solutionCards = new Card[3];
 		int counter = r.nextInt(RoomCards.size());
