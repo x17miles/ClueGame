@@ -146,9 +146,16 @@ public class Board {
 		makeDeck();
 		dealHands();
 	}
-	
+	//get full set of players
 	public Set<Player> getPlayers(){
 		return this.players;
+	}
+	//get player by name
+	public Player getPlayer(String name) {
+		for(Player i : players) {
+			if(i.getName().equals(name)) return i;
+		}
+		return null;
 	}
 	public Set<Card> getWeapons(){
 		return this.weapons;
