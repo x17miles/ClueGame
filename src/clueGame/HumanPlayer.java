@@ -6,5 +6,13 @@ public class HumanPlayer extends Player {
 		super(name, startingLocation, color);
 		// TODO Auto-generated constructor stub
 	}
+
+	@Override
+	public Card disproveSuggestion(Solution suggestion) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	
 	
 }

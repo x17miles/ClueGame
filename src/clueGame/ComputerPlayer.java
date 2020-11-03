@@ -1,5 +1,8 @@
 package clueGame;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 public class ComputerPlayer extends Player {
 
 	public ComputerPlayer(String name, int[] startingLocation, String color) {
@@ -13,5 +16,20 @@ public class ComputerPlayer extends Player {
 	
 	public BoardCell selectTargets() {
 		return new BoardCell(0,0,'-');
+	}
+
+	@Override
+	public Card disproveSuggestion(Solution suggestion) {
+		ArrayList<Card> suggestionCards = new ArrayList<Card>();
+		suggestionCards.add(suggestion.person);
+		suggestionCards.add(suggestion.room);
+		suggestionCards.add(suggestion.weapon);
+		ArrayList<Card> matchingCards = new ArrayList<Card>();
+		for(Card i : suggestionCards) {
+			if (super.getHand().contains(i)) matchingCards.add(i);
+		}
+		if(matchingCards.size() == 0) return null;
+		Random r = new Random();
+		return matchingCards.get(r.nextInt(matchingCards.size()));
 	}
 }

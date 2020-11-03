@@ -19,20 +19,7 @@ public abstract class Player {
 		this.seen = new ArrayList<Card>();
 	}
 	
-	public Card disproveSuggestion(Solution suggestion) {
-		//stub
-		ArrayList<Card> suggestionCards = new ArrayList<Card>();
-		suggestionCards.add(suggestion.person);
-		suggestionCards.add(suggestion.room);
-		suggestionCards.add(suggestion.weapon);
-		ArrayList<Card> matchingCards = new ArrayList<Card>();
-		for(Card i : suggestionCards) {
-			if (hand.contains(i)) matchingCards.add(i);
-		}
-		if(matchingCards.size() == 0) return null;
-		Random r = new Random();
-		return matchingCards.get(r.nextInt(matchingCards.size()));
-	}
+	public abstract Card disproveSuggestion(Solution suggestion);
 	
 	public void updateSeen(Card seenCard) {
 		seen.add(seenCard);
