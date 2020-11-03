@@ -7,4 +7,11 @@ public class ComputerPlayer extends Player {
 		// TODO Auto-generated constructor stub
 	}
 	
+	public Solution createSuggestion() {
+		return new Solution(new Card("stub1", CardType.PERSON), new Card("stub2", CardType.ROOM), new Card("stub3", CardType.WEAPON));
+	}
+	
+	public BoardCell selectTargets() {
+		return new BoardCell(0,0,'-');
+	}
 }

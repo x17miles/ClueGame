@@ -7,6 +7,7 @@ public abstract class Player {
 	private int[] startingLocation;
 	private String color;
 	private ArrayList<Card> hand;
+	private ArrayList<Card> seen;
 	
 	public Player(String name, int[] startingLocation, String color) {
 		super();
@@ -14,6 +15,16 @@ public abstract class Player {
 		this.startingLocation = startingLocation;
 		this.color = color;
 		this.hand = new ArrayList<Card>();
+		this.seen = new ArrayList<Card>();
+	}
+	
+	public Card disproveSuggestion() {
+		//stub
+		return this.hand.get(0);
+	}
+	
+	public void updateSeen(Card seenCard) {
+		seen.add(seenCard);
 	}
 	
 	public String getName() {
