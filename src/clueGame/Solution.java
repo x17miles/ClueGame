@@ -12,6 +12,17 @@ public class Solution {
 		this.room = room;
 		this.weapon = weapon;
 	}
+
+	@Override
+	public boolean equals(Object o) {
+		if(o == null || o.getClass() != this.getClass()) return false;
+		Solution target = (Solution) o;
+		if(this.person.equals(target.person) && this.room.equals(target.room)&&this.weapon.equals(target.weapon)) {
+			return true;
+		}
+		return false;
+	}
+	
 	
 	
 }

@@ -38,8 +38,23 @@ public class Board {
 			
 		}
 	}
+	public boolean checkAccusation(Solution accusation) {
+		if(this.solution.equals(accusation)) return true;
+		return false;
+	}
 	public Solution getSolution() {
 		return this.solution;
+	}
+	//largely used for testing
+	public void setSolution(Solution s) {
+		this.solution = s;
+	}
+	//get card from deck using cardName
+	public Card getDeckCard(String cardName) {
+		for(Card i : deck) {
+			if(i.getName().equals(cardName)) return i;
+		}
+		return null;
 	}
 	
 	public void makeDeck() {
