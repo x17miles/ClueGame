@@ -59,4 +59,9 @@ public abstract class Player {
 	public void updateHand(Card card) {
 		this.hand.add(card);
 	}
+	
+	//For testing
+	public void clearHand() {
+		this.hand.clear();
+	}
 }

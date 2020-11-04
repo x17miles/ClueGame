@@ -14,6 +14,7 @@ public class Board {
 	private String setupConfigFile;
 	private Map<Character,Room> roomMap;
 	private Set<Player> players;
+	private ArrayList<Player> orderedPlayers;
 	private Set<Card> weapons;
 	private Set<Card> deck;
 	private Set<Card> dealableCards;
@@ -32,12 +33,50 @@ public class Board {
 		//call load config files, if any bad config format exceptions are thrown, print out the error message
 		try {
 			loadConfigFiles();
+			generatePlayerOrder();
 		}
 		catch(BadConfigFormatException e) {
 			System.out.println(e.getMessage());
 			
 		}
 	}
+	
+	public ArrayList<Player> getPlayerOrder(){
+		return this.orderedPlayers;
+	}
+	
+	//May not be necessary, but added just in case
+	public void setPlayerOrder(ArrayList<Player> p) {
+		this.orderedPlayers = p;
+	}
+	
+	public void generatePlayerOrder() {
+		this.orderedPlayers = new ArrayList<Player>();
+		for(Player p: players) {
+			orderedPlayers.add(p);
+		}
+	}
+	
+	public Card handleSuggestion(Solution suggestion, Player p) {
+		ArrayList<Card> suggestionCards = new ArrayList<Card>();
+		suggestionCards.add(suggestion.person);
+		suggestionCards.add(suggestion.room);
+		suggestionCards.add(suggestion.weapon);
+		int counter = orderedPlayers.indexOf(p);
+		
+		for(int i = counter+1; i!=counter; i++) {
+			if(i >= orderedPlayers.size()) {
+				i = 0;
+			}
+			for(Card c: orderedPlayers.get(i).getHand()) {
+				if(suggestionCards.contains(c)) {
+					return c;
+				}
+			}
+		}
+		return null;
+	}
+	
 	public boolean checkAccusation(Solution accusation) {
 		if(this.solution.equals(accusation)) return true;
 		return false;

@@ -61,5 +61,45 @@ class PlayerTests2 {
 		assertTrue(captCount>0);
 		assertEquals(10,medCount+captCount);	
 	}
+	
+	@Test
+	void makeSuggestionTest() {
+		board.deal();
+		for(Player p: board.getPlayers()) {
+			p.clearHand();
+		}
+		int[] startLoc = {0,0};
+		Player testPlayerOne = board.getPlayer("Captain");
+		Player testPlayerTwo = board.getPlayer("Cook");
+		Player testPlayerThree = board.getPlayer("Doctor");
+		Player testPlayerHuman = board.getPlayer("Jimbothy");
+		
+		Solution suggestion = new Solution(board.getDeckCard("Captain"),board.getDeckCard("Medical"),board.getDeckCard("RayGun"));
+		
+		assertEquals(null, board.handleSuggestion(suggestion, testPlayerOne));
+		
+		testPlayerOne.updateHand(board.getDeckCard("Cook"));
+		assertEquals(null, board.handleSuggestion(suggestion, testPlayerOne));
+		
+		testPlayerTwo.updateHand(board.getDeckCard("Medical"));
+		assertEquals(board.getDeckCard("Medical"), board.handleSuggestion(suggestion, testPlayerOne));
+		//Clear both hands for new test
+		testPlayerOne.clearHand();
+		testPlayerTwo.clearHand();
+		
+		testPlayerHuman.updateHand(board.getDeckCard("RayGun"));
+		assertEquals(board.getDeckCard("RayGun"), board.handleSuggestion(suggestion, testPlayerOne));
+		
+		testPlayerHuman.clearHand();
+		ArrayList<Player> orderedPlayers = new ArrayList<Player>();
+		orderedPlayers.add(testPlayerOne);
+		orderedPlayers.add(testPlayerTwo);
+		orderedPlayers.add(testPlayerThree);
+		orderedPlayers.get(1).updateHand(board.getDeckCard("Medical"));
+		orderedPlayers.get(2).updateHand(board.getDeckCard("RayGun"));
+		board.setPlayerOrder(orderedPlayers);
+		assertEquals(board.getDeckCard("Medical"), board.handleSuggestion(suggestion, testPlayerOne));
+		assertEquals(board.getDeckCard("RayGun"), board.handleSuggestion(suggestion, testPlayerTwo));
+	}
 
 }
