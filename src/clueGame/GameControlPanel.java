@@ -25,6 +25,7 @@ public class GameControlPanel extends JPanel{
 	}
 
 	public GameControlPanel() {
+		//Initiallizing private variables
 		turn = new JTextField(20);
 		turn.setEditable(false);
 		rollAmount = new JTextField(5);
@@ -35,6 +36,7 @@ public class GameControlPanel extends JPanel{
 		guess.setEditable(false);
 		guessResult = new JTextField(20);
 		guessResult.setEditable(false);
+		//Initialize board
 		setLayout(new GridLayout(2,0));
 		JPanel panel = createRowOne();
 		add(panel);
