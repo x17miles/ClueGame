@@ -1,5 +1,6 @@
 package clueGame;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -58,6 +59,13 @@ public abstract class Player {
 	}
 	public String getColor() {
 		return color;
+	}
+	public Color getColorType() {
+		try {
+			return (Color)Color.class.getField(color.toLowerCase()).get(null);
+		} catch (Exception e) {
+			return Color.WHITE;
+		}
 	}
 	public void setColor(String color) {
 		this.color = color;

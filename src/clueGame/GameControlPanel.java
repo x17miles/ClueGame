@@ -21,6 +21,7 @@ public class GameControlPanel extends JPanel{
 
 	public void setTurn(Player p, int roll) {
 		this.turn.setText(p.getName());
+		this.turn.setForeground(p.getColorType());
 		this.rollAmount.setText(Integer.toString(roll));
 	}
 
@@ -98,7 +99,7 @@ public class GameControlPanel extends JPanel{
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE); // allow it to close
         frame.setVisible(true); // make it visible
         int[] startLoc = {0,0};
-        panel.setTurn(new ComputerPlayer("Captain", startLoc, "white"),3);
+        panel.setTurn(new ComputerPlayer("Captain", startLoc, "red"),3);
 
         // test filling in the data
         panel.setGuess( "I have no guess!");
