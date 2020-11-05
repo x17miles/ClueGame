@@ -185,6 +185,9 @@ public class Board {
 		makeDeck();
 		dealHands();
 	}
+	public Set<Card> getDeck(){
+		return this.deck;
+	}
 	//get full set of players
 	public Set<Player> getPlayers(){
 		return this.players;

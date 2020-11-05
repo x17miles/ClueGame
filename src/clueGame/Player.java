@@ -9,6 +9,7 @@ public abstract class Player {
 	private String color;
 	private ArrayList<Card> hand;
 	private ArrayList<Card> seen;
+	private int row,col;
 	
 	public Player(String name, int[] startingLocation, String color) {
 		super();
@@ -17,12 +18,17 @@ public abstract class Player {
 		this.color = color;
 		this.hand = new ArrayList<Card>();
 		this.seen = new ArrayList<Card>();
+		this.row = startingLocation[0];
+		this.col = startingLocation[1];
 	}
 	
 	public abstract Card disproveSuggestion(Solution suggestion);
 	
 	public void updateSeen(Card seenCard) {
 		seen.add(seenCard);
+	}
+	public ArrayList<Card> getSeen(){
+		return seen;
 	}
 	
 	public String getName() {
@@ -33,6 +39,10 @@ public abstract class Player {
 	}
 	public int[] getStartingLocation() {
 		return startingLocation;
+	}
+	public int[] getPosition() {
+		int[] pos = {this.row, this.col};
+		return pos;
 	}
 	public void setStartingLocation(int[] startingLocation) {
 		this.startingLocation = startingLocation;
@@ -58,10 +68,13 @@ public abstract class Player {
 
 	public void updateHand(Card card) {
 		this.hand.add(card);
+		this.seen.add(card);
 	}
 	
 	//For testing
 	public void clearHand() {
 		this.hand.clear();
 	}
+
+	public abstract Solution createSuggestion(Room room);
 }
