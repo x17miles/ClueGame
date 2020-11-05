@@ -92,6 +92,9 @@ public abstract class Player {
 	public void clearHand() {
 		this.hand.clear();
 	}
+	public void clearSeen() {
+		this.seen.clear();
+	}
 
 	public abstract Solution createSuggestion(Room room);
 
