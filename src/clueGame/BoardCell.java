@@ -66,6 +66,10 @@ public class BoardCell {
 	public char getInitial() {
 		return initial;
 	}
+	public int[] getPosition() {
+		int[] pos = {row,col};
+		return pos;
+	}
 	
 	public char getSecretPassage() {
 		return secretPassage;
@@ -103,6 +107,15 @@ public class BoardCell {
 		return this.secret;
 	}
 
+	@Override
+	public boolean equals(Object obj) {
+		// TODO Auto-generated method stub
+		if(obj == null || obj.getClass() != this.getClass()) return false;
+		BoardCell target = (BoardCell) obj;
+		if(this.row == target.row && this.col == target.col && this.initial ==target.getInitial()) return true;
+		return false;
+	}
 
+	
 	
 }

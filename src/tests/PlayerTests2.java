@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
 
@@ -117,7 +118,7 @@ class PlayerTests2 {
 	
 	
 	@Test
-	public void testComputerSuggestion() {
+	public void testMultipleUnseenSuggestion() {
 		//setup
 		board.deal();
 		Player p1 = board.getPlayer("Captain");
@@ -218,6 +219,36 @@ class PlayerTests2 {
 		p1.updateSeen(board.getDeckCard("Space Hammer"));
 		assertEquals(new Solution(board.getDeckCard("Jimbothy"), board.getDeckCard("Medical"), board.getDeckCard("RayGun")),
 				p1.createSuggestion(board.getRoom(board.getCell(3, 3))));
+	}
+	
+	@Test
+	void computerSelectTargetsTest() {
+		board.calcTargets(board.getCell(6, 6), 1);
+		Player p1 = board.getPlayer("Captain");
+		Set<BoardCell> targets = board.getTargets();
+		Set<BoardCell> selectedTargets = new HashSet<BoardCell>();
+		
+		//no rooms in list, select randomly
+		for(int i = 0; i < 20; i++) {
+			selectedTargets.add(p1.selectTargets());
+		}
+		for(BoardCell i : selectedTargets) {
+			assertTrue(targets.contains(i));
+		}
+		assertTrue(targets.size() >= 4);
+		
+		//one unvisited room in targets list, should be only target selected
+		board.calcTargets(board.getCell(14, 6), 1);
+		assertEquals(board.getCell(17, 4), p1.selectTargets());
+		
+		//given the previous test, the room has now been visited and multiple different targets should be possible
+		selectedTargets.clear();
+		for(int i = 0; i < 10; i++) {
+			BoardCell target= p1.selectTargets();
+			assertTrue(board.getTargets().contains(target));
+			selectedTargets.add(target);
+		}
+		assertTrue(selectedTargets.size() > 1);
 	}
 
 }

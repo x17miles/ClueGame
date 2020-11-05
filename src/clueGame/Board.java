@@ -58,26 +58,32 @@ public class Board {
 	}
 	
 	public Card handleSuggestion(Solution suggestion, Player p) {
+		//create an iterable list of the cards in the suggestion
 		ArrayList<Card> suggestionCards = new ArrayList<Card>();
 		suggestionCards.add(suggestion.person);
 		suggestionCards.add(suggestion.room);
 		suggestionCards.add(suggestion.weapon);
+		//create a counter to go through the next player in line
 		int counter = orderedPlayers.indexOf(p);
 		
+		//go through each player in the order, loop back until you get to the original player
 		for(int i = counter+1; i!=counter; i++) {
 			if(i >= orderedPlayers.size()) {
 				i = 0;
 			}
+			//if the player has a card that is in the suggestion, return the card
 			for(Card c: orderedPlayers.get(i).getHand()) {
 				if(suggestionCards.contains(c)) {
 					return c;
 				}
 			}
 		}
+		//if no cards counter it, return null
 		return null;
 	}
 	
 	public boolean checkAccusation(Solution accusation) {
+		//.equals is overridden, so this is all we need to do
 		if(this.solution.equals(accusation)) return true;
 		return false;
 	}
