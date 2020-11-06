@@ -44,15 +44,21 @@ public class KnownCardsPanel extends JPanel{
 	
 	public JPanel createPanelsFromCardType(CardType type) {
 		JPanel panel = new JPanel();
+		//we need to obtain the  jtextfields for the hand items and seen items
 		ArrayList<JTextField> handItems = getHandItems(type);
 		ArrayList<JTextField> seenItems = getSeenItems(type);
+		//add a title
 		panel.setBorder(new TitledBorder(new EtchedBorder(), type.getString()));
+		//the size is 2 for labels + the total amount of JTextFields
 		panel.setLayout(new GridLayout(2+handItems.size()+seenItems.size(), 0));
+		
+		//add in hand items
 		JLabel inHandLabel = new JLabel("In Hand:");
 		panel.add(inHandLabel);
 		for(JTextField jtf : handItems) {
 			panel.add(jtf);
 		}
+		//add seen items
 		JLabel seenLabel = new JLabel("Seen:");
 		panel.add(seenLabel);
 		for(JTextField jtf : seenItems) {
@@ -63,7 +69,9 @@ public class KnownCardsPanel extends JPanel{
 	}
 	public ArrayList<JTextField> getHandItems(CardType type){
 		ArrayList<JTextField> handItems = new ArrayList<JTextField>();
+		//loop through cards in hand
 		for(Card c : hand) {
+			//if the type matches, create a JTextField of the object
 			if(c.getType() == type) {
 				JTextField textField = new JTextField(20);
 				textField.setEditable(false);
@@ -71,6 +79,7 @@ public class KnownCardsPanel extends JPanel{
 				handItems.add(textField);
 			}
 		}
+		//if no seen items, return a none block
 		if(handItems.size() == 0) {
 			handItems.add(createNoneBlock());
 		}
@@ -78,7 +87,9 @@ public class KnownCardsPanel extends JPanel{
 	}
 	public ArrayList<JTextField> getSeenItems(CardType type){
 		ArrayList<JTextField> seenItems = new ArrayList<JTextField>();
+		//loop through all cards in seen
 		for(Card c : seen) {
+			//if it matches the type, add a jtextfield of the object
 			if(c.getType() == type && !hand.contains(c)) {
 				JTextField textField = new JTextField(20);
 				textField.setEditable(false);
@@ -86,11 +97,13 @@ public class KnownCardsPanel extends JPanel{
 				seenItems.add(textField);
 			}
 		}
+		//if none, add a none block
 		if(seenItems.size() == 0) {
 			seenItems.add(createNoneBlock());
 		}
 		return seenItems;
 	}
+	//create a block that says NONE
 	public JTextField createNoneBlock() {
 		JTextField noneBlock = new JTextField(20);
 		noneBlock.setEditable(false);
@@ -118,6 +131,7 @@ public class KnownCardsPanel extends JPanel{
         		p.updateSeen(c);
         	}
         }
+        //update the panel
         panel.setPlayer(p);
 	}
 
