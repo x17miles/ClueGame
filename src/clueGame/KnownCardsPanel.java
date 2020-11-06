@@ -10,10 +10,16 @@ public class KnownCardsPanel extends JPanel{
 	private Player player;
 	private ArrayList<Card> hand,seen;
 	private ArrayList<JTextField> people,rooms,weaons;
+	private JPanel mainPanel;
 	public void setPlayer(Player p) {
 		this.player = p;
 		hand = player.getHand();
 		seen = player.getSeen();
+		remove(mainPanel);
+		mainPanel = createKnownPanel();
+		add(mainPanel);
+		revalidate();
+		repaint();
 	}
 	public KnownCardsPanel() {
 		//initialize instance variables
@@ -21,8 +27,8 @@ public class KnownCardsPanel extends JPanel{
 		this.seen = new ArrayList<Card>();
 		//initialize panel
 		setLayout(new GridLayout (0, 1));
-		JPanel panel = createKnownPanel();
-		add(panel);
+		mainPanel = createKnownPanel();
+		add(mainPanel);
 	}
 	public JPanel createKnownPanel() {
 		JPanel panel = new JPanel();
