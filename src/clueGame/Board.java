@@ -474,5 +474,17 @@ public class Board {
 	public Set<BoardCell> getAdjList(int row, int col){
 		return grid[row][col].getAdjList();
 	}
+	
+	public Player getCardOwner(String cardName) {
+		Card c = this.getDeckCard(cardName);
+		for(Player p : players) {
+			for(Card i : p.getHand()) {
+				if (i.equals(c)) {
+					return p;
+				}
+			}
+		}
+		return null;
+	}
 
 }

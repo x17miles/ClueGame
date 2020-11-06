@@ -107,13 +107,13 @@ public class KnownCardsPanel extends JPanel{
         frame.setVisible(true); // make it visible
         
         //add player w/ all cards
-        Board board = Board.getInstance();
-        board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
-        board.initialize();
-        board.deal();
-        Player p = board.getPlayer("Captain");
+        Board mainBoard = Board.getInstance();
+        mainBoard.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
+        mainBoard.initialize();
+        mainBoard.deal();
+        Player p = mainBoard.getPlayer("Jimbothy");
         p.clearSeen();
-        for(Card c : board.getDeck()) {
+        for(Card c : mainBoard.getDeck()) {
         	if(!p.getHand().contains(c)) {
         		p.updateSeen(c);
         	}
