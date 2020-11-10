@@ -44,15 +44,19 @@ public class BoardCell{
 //		if(initial == 'W') {
 //			g.setColor(Color.RED);
 //		}
-		if(inRoom) {
-			g.setColor(Color.GRAY);
+		if(initial == 'W') {
+			g.setColor(Color.RED);
+		} else if (initial == 'X') {
+			g.setColor(Color.black);
+		} else if (secret) {
+			g.setColor(Color.orange);
 		}
 		else {
-			g.setColor(Color.RED);
+			g.setColor(Color.gray);
 		}
 			
-		g.fillRect(col*width/cols, row*height/rows, width/cols, height/rows);
-		g.setColor(Color.BLACK);
+		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
+		//g.fillRect(col*width/cols, row*height/rows, 3, 3);
 	}
 	
 	public void setSecretPassage(char c) {

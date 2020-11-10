@@ -14,6 +14,7 @@ public class ClueGame extends JFrame{
 	public ClueGame(){
 		this.setSize(1000,1000);
 		this.setTitle("Clue Game");
+		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.board = board.getInstance();
 		this.board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
 		this.board.initialize();
@@ -32,5 +33,6 @@ public class ClueGame extends JFrame{
 	public static void main(String[] args) {
 		ClueGame clueGame = new ClueGame();
 		clueGame.setVisible(true);
+		clueGame.repaint();
 	}
 }

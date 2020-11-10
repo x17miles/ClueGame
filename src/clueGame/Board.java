@@ -7,7 +7,9 @@ import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.*;
 
+import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class Board extends JPanel{
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
@@ -47,11 +49,17 @@ public class Board extends JPanel{
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
-//		g.setColor(Color.black);
-	//	g.fillRect(0, 0, getWidth(), getHeight());
+		g.setColor(Color.black);
+		g.fillRect(0, 0, getWidth(), getHeight());
 		for(BoardCell[] i: grid) {
 			for(BoardCell j: i) {
 				j.paint(g,getWidth(), getHeight(),numColumns, numRows);
+				if(j.isLabel()) {
+					JLabel label = new JLabel(roomMap.get(j.getInitial()).getName());
+					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 100, getHeight()/numRows);
+					add(label);
+					
+				}
 			}
 		}
 	}
