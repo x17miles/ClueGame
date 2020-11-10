@@ -45,7 +45,8 @@ public class BoardCell{
 //			g.setColor(Color.RED);
 //		}
 		if(initial == 'W') {
-			g.setColor(Color.RED);
+			Color maroon = new Color(128,0,0);
+			g.setColor(maroon);
 		} else if (initial == 'X') {
 			g.setColor(Color.black);
 		} else if (secret) {

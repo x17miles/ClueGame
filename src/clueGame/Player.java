@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Graphics;
 import java.util.ArrayList;
 import java.util.Random;
 
@@ -23,6 +24,10 @@ public abstract class Player {
 		this.row = startingLocation[0];
 		this.col = startingLocation[1];
 		this.visitedRooms = new ArrayList<Room>();
+	}
+	public void paint(Graphics g, int width, int height, int cols, int rows) {
+		g.setColor(getColorType());
+		g.fillOval(col*width/cols, row*height/rows, width/cols -1, height/rows -1);
 	}
 	
 	public abstract Card disproveSuggestion(Solution suggestion);

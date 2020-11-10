@@ -12,7 +12,7 @@ public class ClueGame extends JFrame{
 	private Random rand = new Random();
 	
 	public ClueGame(){
-		this.setSize(1000,1000);
+		this.setSize(1200,1200);
 		this.setTitle("Clue Game");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
 		this.board = board.getInstance();

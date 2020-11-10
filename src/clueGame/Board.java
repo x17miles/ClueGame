@@ -49,6 +49,7 @@ public class Board extends JPanel{
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		removeAll();
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		for(BoardCell[] i: grid) {
@@ -56,12 +57,16 @@ public class Board extends JPanel{
 				j.paint(g,getWidth(), getHeight(),numColumns, numRows);
 				if(j.isLabel()) {
 					JLabel label = new JLabel(roomMap.get(j.getInitial()).getName());
-					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 100, getHeight()/numRows);
+					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 200, getHeight()/numRows);
 					add(label);
 					
 				}
 			}
 		}
+		for(Player p : players) {
+			p.paint(g, getWidth(), getHeight(), numColumns, numRows);
+		}
+		revalidate();
 	}
 	
 	public ArrayList<Player> getPlayerOrder(){
