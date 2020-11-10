@@ -1,9 +1,13 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.util.HashSet;
 import java.util.Set;
 
-public class BoardCell {
+import javax.swing.JPanel;
+
+public class BoardCell{
 	private int row;
 	private int col;
 	private char initial;
@@ -34,6 +38,21 @@ public class BoardCell {
 		roomLabel = false;
 		this.initial = initial;
 		doorDirection = DoorDirection.NONE;
+	}
+	
+	public void paint(Graphics g, int width, int height, int cols, int rows) {
+//		if(initial == 'W') {
+//			g.setColor(Color.RED);
+//		}
+		if(inRoom) {
+			g.setColor(Color.GRAY);
+		}
+		else {
+			g.setColor(Color.RED);
+		}
+			
+		g.fillRect(col*width/cols, row*height/rows, width/cols, height/rows);
+		g.setColor(Color.BLACK);
 	}
 	
 	public void setSecretPassage(char c) {

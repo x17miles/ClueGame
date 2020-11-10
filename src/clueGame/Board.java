@@ -1,11 +1,15 @@
 package clueGame;
 
+import java.awt.Color;
+import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class Board {
+import javax.swing.JPanel;
+
+public class Board extends JPanel{
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
 	private BoardCell[][] grid;
 	private Set<BoardCell> visited = new HashSet<BoardCell>();
@@ -38,6 +42,17 @@ public class Board {
 		catch(BadConfigFormatException e) {
 			System.out.println(e.getMessage());
 			
+		}
+	}
+	
+	public void paintComponent(Graphics g) {
+		super.paintComponent(g);
+//		g.setColor(Color.black);
+	//	g.fillRect(0, 0, getWidth(), getHeight());
+		for(BoardCell[] i: grid) {
+			for(BoardCell j: i) {
+				j.paint(g,getWidth(), getHeight(),numColumns, numRows);
+			}
 		}
 	}
 	
