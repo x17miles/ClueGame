@@ -1,6 +1,7 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
@@ -10,6 +11,7 @@ import java.util.*;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 public class Board extends JPanel{
 	private Set<BoardCell> targets = new HashSet<BoardCell>();
@@ -57,7 +59,12 @@ public class Board extends JPanel{
 				j.paint(g,getWidth(), getHeight(),numColumns, numRows);
 				if(j.isLabel()) {
 					JLabel label = new JLabel(roomMap.get(j.getInitial()).getName());
-					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 200, getHeight()/numRows);
+					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 150, getHeight()/numRows);
+					label.setForeground(Color.WHITE);
+					label.setBackground(new Color(128,0,0));
+					label.setOpaque(true);
+					label.setHorizontalAlignment(SwingConstants.CENTER);
+					label.setVerticalAlignment(SwingConstants.CENTER);
 					add(label);
 					
 				}

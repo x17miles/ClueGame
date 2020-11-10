@@ -54,10 +54,29 @@ public class BoardCell{
 		}
 		else {
 			g.setColor(Color.gray);
+			g.fillRect(col*width/cols, row*height/rows, width/cols+1, height/rows+1);
+			return;
 		}
 			
 		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
 		//g.fillRect(col*width/cols, row*height/rows, 3, 3);
+		
+		Color silver = new Color(220,220,220);
+		g.setColor(silver);
+		switch (this.doorDirection) {
+		case UP:
+			g.fillRect(col*width/cols, row*height/rows, width/cols-1, (height/rows)/8 + 1);
+			break;
+		case DOWN:
+			g.fillRect(col*width/cols, (int)((row + 7.0/8)*height/rows), width/cols-1, height/rows-1);
+			break;
+		case LEFT:
+			g.fillRect(col*width/cols, row*height/rows, (width/cols-1)/8 + 1, height/rows-1);
+			break;
+		case RIGHT:
+			g.fillRect((int)((col + 7.0/8)*width/cols), row*height/rows, width/cols-1, height/rows-1);
+			break;
+		}
 	}
 	
 	public void setSecretPassage(char c) {
