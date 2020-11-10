@@ -61,6 +61,10 @@ public class BoardCell{
 		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
 		//g.fillRect(col*width/cols, row*height/rows, 3, 3);
 		
+		addDoorComponent(g, width, height, cols, rows);
+	}
+
+	private void addDoorComponent(Graphics g, int width, int height, int cols, int rows) {
 		Color silver = new Color(220,220,220);
 		g.setColor(silver);
 		switch (this.doorDirection) {

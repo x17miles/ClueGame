@@ -26,6 +26,7 @@ public abstract class Player {
 		this.visitedRooms = new ArrayList<Room>();
 	}
 	public void paint(Graphics g, int width, int height, int cols, int rows) {
+		//add a circle with the player's color at the player's current position
 		g.setColor(getColorType());
 		g.fillOval(col*width/cols, row*height/rows, width/cols -1, height/rows -1);
 	}

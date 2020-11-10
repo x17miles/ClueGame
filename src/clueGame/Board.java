@@ -51,15 +51,19 @@ public class Board extends JPanel{
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
+		//remove anything presently on the board component
 		removeAll();
+		//set the background to black
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
+		//add all board cells, create label objects if the cell is a room object (easier/smarter to add from here to prevent overlap issues)
 		for(BoardCell[] i: grid) {
 			for(BoardCell j: i) {
 				j.paint(g,getWidth(), getHeight(),numColumns, numRows);
 				if(j.isLabel()) {
 					JLabel label = new JLabel(roomMap.get(j.getInitial()).getName());
 					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 150, getHeight()/numRows);
+					//white text, maroon background, centered text
 					label.setForeground(Color.WHITE);
 					label.setBackground(new Color(128,0,0));
 					label.setOpaque(true);
@@ -70,9 +74,11 @@ public class Board extends JPanel{
 				}
 			}
 		}
+		//have each player paint their position as well
 		for(Player p : players) {
 			p.paint(g, getWidth(), getHeight(), numColumns, numRows);
 		}
+		//after adding everything, run a quick revalidation
 		revalidate();
 	}
 	
