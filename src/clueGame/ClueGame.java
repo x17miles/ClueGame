@@ -4,6 +4,7 @@ import java.awt.BorderLayout;
 import java.util.*;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 public class ClueGame extends JFrame{
 	private Board board;
@@ -39,8 +40,21 @@ public class ClueGame extends JFrame{
 		add(controlPanel, BorderLayout.SOUTH);
 	}
 	
+	
+	
 	public static void main(String[] args) {
 		ClueGame clueGame = new ClueGame();
+		Random rand = new Random();
+		Board board = Board.getInstance();
+		board.calcTargets(board.getCell(board.getPlayer("Jimbothy").getPosition()[0],board.getPlayer("Jimbothy").getPosition()[1]), rand.nextInt(6)+1);
 		clueGame.setVisible(true);
+		JOptionPane.showMessageDialog(null,"You are Jimbothy, solve the murder before the other crew members!");
+		
+		
+		
+	}
+	
+	public void nextClicked() {
+		
 	}
 }

@@ -2,6 +2,9 @@ package clueGame;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -40,13 +43,29 @@ public class BoardCell{
 		doorDirection = DoorDirection.NONE;
 	}
 	
+	private class CellListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+		
+	}
+	
 	public void paint(Graphics g, int width, int height, int cols, int rows) {
 //		if(initial == 'W') {
 //			g.setColor(Color.RED);
 //		}
 		if(initial == 'W') {
-			Color maroon = new Color(128,0,0);
-			g.setColor(maroon);
+			if(Board.getInstance().getTargets().contains(Board.getInstance().getCell(row, col))) {
+				g.setColor(Color.CYAN);
+			}
+			else {
+				Color maroon = new Color(128,0,0);
+				g.setColor(maroon);
+			}
+			
 		} else if (initial == 'X') {
 			g.setColor(Color.black);
 		} else if (secret) {
@@ -57,7 +76,8 @@ public class BoardCell{
 			g.fillRect(col*width/cols, row*height/rows, width/cols+1, height/rows+1);
 			return;
 		}
-			
+		Rectangle rect = new Rectangle(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
+		//Add rect to g?
 		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
 		//g.fillRect(col*width/cols, row*height/rows, 3, 3);
 		
