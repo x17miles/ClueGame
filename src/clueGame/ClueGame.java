@@ -54,33 +54,40 @@ public class ClueGame extends JFrame{
 	}
 	
 	public void loadNextPlayer() {
+		//get ordered player list
 		ArrayList<Player> players = board.getPlayerOrder();
+		//set the current player as next in line
 		currPlayer = players.get((players.indexOf(currPlayer) +1 ) % players.size());
-		cardPanel.setPlayer(currPlayer);
 		int roll = rand.nextInt(6) + 1;
+		//update control panel
 		controlPanel.setTurn(currPlayer, roll);
+		//get new targets from random roll
 		board.calcTargets(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]), roll);
+		//reset turn flags
 		moved = false;
 		suggestionFlag = false;
 		if(!currPlayer.getName().equals("Jimbothy")) {
+			//run through automated turn if computer
 			processComputerTurn();
 		}
 	}
 	public void processComputerTurn() {
-		// check accusation
-		// check player movement
+		//get a new target
 		BoardCell target = currPlayer.selectTargets();
+		//adjust position
 		currPlayer.setPosition(target.getPosition()[0], target.getPosition()[1]);
 		moved = true;
+		//if a room center, handle the suggestion
 		if(target.isRoomCenter()) {
 			handleSuggestion(board.getRoom(target));
 		}
+		//repaint to show changes
 		repaint();
-		// handle suggestion / run suggestion.
-		// handle next click
 	}
 	public void cellClicked(BoardCell cell) {
+		//it must be human player's turn
 		if(currPlayer.getName().equals("Jimbothy")) {
+			//if the cell is in the target list or in a room in the target list, adjust appropriately
 			if(!moved && (board.getTargets().contains(cell) || board.getTargets().contains(board.getRoom(cell).getCenterCell() ))) {
 				currPlayer.setPosition(cell.getPosition()[0], cell.getPosition()[1]);
 				if(board.getTargets().contains(board.getRoom(cell).getCenterCell())) {
@@ -92,6 +99,7 @@ public class ClueGame extends JFrame{
 					handleSuggestion(board.getRoom(cell));
 				}
 			} else {
+				//throw error messages for wrong moves
 				if(!moved) {
 					JOptionPane.showMessageDialog(null,"Please select a valid target.");
 				} else {
@@ -104,52 +112,25 @@ public class ClueGame extends JFrame{
 		repaint();
 	}
 	public void handleSuggestion(Room room) {
+		// player must craft a suggestion, currently blocked by a message
 		if(currPlayer.getName().equals("Jimbothy")) {
-			JOptionPane.showMessageDialog(null,"You need to make an accusation");
+			JOptionPane.showMessageDialog(null,"You need to make a suggestion");
 		}
 		Solution suggestion = currPlayer.createSuggestion(room);
 		board.handleSuggestion(suggestion, currPlayer);
 		suggestionFlag = true;
 	}
 	
-	//handle loading next player
-	//rotate player to next in order
-	//random roll
-	//display targets
-	
-	//handle accusation
-	//if accusation clicked, check if it matches the solution. if yes, win, if no, lose
-	
-	//assuring movement
-	//player clicks correct location
-	//adjust player location, redraw board
-	
-	//handle suggestion / disproof
-	//if in room, run a suggestion. 
-	
-	//next handle
-	//if player is done, moves to next
-	
-	
-	
-	
-	
-	public static void main(String[] args) {
-		ClueGame clueGame = ClueGame.getInstance();
-		JOptionPane.showMessageDialog(null,"You are Jimbothy, solve the murder before the other crew members!");
-		clueGame.setVisible(true);
-		//clueGame.loadNextPlayer();
-		
-		
-	}
-	
 	public void nextClicked() {
+		//make sure they have moved
 		if(this.moved) {
+			//if in a room, make sure they made a suggestion
 			if( board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() != 'W' && this.suggestionFlag) {
 				loadNextPlayer();
 			} else if (board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() == 'W') {
 				loadNextPlayer();
 			} else {
+		//throw appropriate error messages
 				JOptionPane.showMessageDialog(null,"A suggestion needs to be made");
 			}
 		} else {
@@ -157,6 +138,21 @@ public class ClueGame extends JFrame{
 		}
 	}
 	public void accuseClicked() {
+		//stubbed w/ error message for now
 		JOptionPane.showMessageDialog(null, "you clicked accuse");
 	}
+	
+	
+	public static void main(String[] args) {
+		//get the clue game instance
+		ClueGame clueGame = ClueGame.getInstance();
+		//initial message
+		JOptionPane.showMessageDialog(null,"You are Jimbothy, solve the murder before the other crew members!");
+		//run the game
+		clueGame.setVisible(true);
+		
+		
+	}
+	
+	
 }
