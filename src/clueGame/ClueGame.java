@@ -6,6 +6,8 @@ import java.util.*;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
+import org.hamcrest.core.IsInstanceOf;
+
 public class ClueGame extends JFrame{
 	private static ClueGame theInstance = new ClueGame();
 	private Board board;
@@ -14,7 +16,7 @@ public class ClueGame extends JFrame{
 	private Random rand = new Random();
 	private Player currPlayer;
 	private boolean moved;
-	
+	private boolean suggestionFlag;
 	public static ClueGame getInstance() {
 		return theInstance;
 	}
@@ -22,6 +24,7 @@ public class ClueGame extends JFrame{
 	public ClueGame(){
 		//set up the jframe
 		moved = false;
+		suggestionFlag = false;
 		this.setSize(1200,1200);
 		this.setTitle("Clue Game");
 		setDefaultCloseOperation(EXIT_ON_CLOSE);
@@ -58,24 +61,55 @@ public class ClueGame extends JFrame{
 		controlPanel.setTurn(currPlayer, roll);
 		board.calcTargets(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]), roll);
 		moved = false;
+		suggestionFlag = false;
+		if(!currPlayer.getName().equals("Jimbothy")) {
+			processComputerTurn();
+		}
 	}
-	public void processTurn() {
+	public void processComputerTurn() {
 		// check accusation
 		// check player movement
+		BoardCell target = currPlayer.selectTargets();
+		currPlayer.setPosition(target.getPosition()[0], target.getPosition()[1]);
+		moved = true;
+		if(target.isRoomCenter()) {
+			handleSuggestion(board.getRoom(target));
+		}
+		repaint();
 		// handle suggestion / run suggestion.
 		// handle next click
 	}
 	public void cellClicked(BoardCell cell) {
-		if(!moved && board.getTargets().contains(cell)) {
-			currPlayer.setPosition(cell.getPosition()[0], cell.getPosition()[1]);
-			moved = true;
-		} else {
-			if(!moved) {
-				JOptionPane.showMessageDialog(null,"Please select a valid target.");
+		if(currPlayer.getName().equals("Jimbothy")) {
+			if(!moved && (board.getTargets().contains(cell) || board.getTargets().contains(board.getRoom(cell).getCenterCell() ))) {
+				currPlayer.setPosition(cell.getPosition()[0], cell.getPosition()[1]);
+				if(board.getTargets().contains(board.getRoom(cell).getCenterCell())) {
+					BoardCell centerCell = board.getRoom(cell).getCenterCell();
+					currPlayer.setPosition(centerCell.getPosition()[0], centerCell.getPosition()[1]);
+				}
+				moved = true;
+				if(cell.isRoomCenter()) {
+					handleSuggestion(board.getRoom(cell));
+				}
 			} else {
-				JOptionPane.showMessageDialog(null,"You have alread moved!");
+				if(!moved) {
+					JOptionPane.showMessageDialog(null,"Please select a valid target.");
+				} else {
+					JOptionPane.showMessageDialog(null,"You have alread moved!");
+				}
 			}
+		} else {
+			JOptionPane.showMessageDialog(null,"It is not your turn.");
 		}
+		repaint();
+	}
+	public void handleSuggestion(Room room) {
+		if(currPlayer.getName().equals("Jimbothy")) {
+			JOptionPane.showMessageDialog(null,"You need to make an accusation");
+		}
+		Solution suggestion = currPlayer.createSuggestion(room);
+		board.handleSuggestion(suggestion, currPlayer);
+		suggestionFlag = true;
 	}
 	
 	//handle loading next player
@@ -110,7 +144,17 @@ public class ClueGame extends JFrame{
 	}
 	
 	public void nextClicked() {
-		JOptionPane.showMessageDialog(null, "you clicked next");
+		if(this.moved) {
+			if( board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() != 'W' && this.suggestionFlag) {
+				loadNextPlayer();
+			} else if (board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() == 'W') {
+				loadNextPlayer();
+			} else {
+				JOptionPane.showMessageDialog(null,"A suggestion needs to be made");
+			}
+		} else {
+			JOptionPane.showMessageDialog(null, currPlayer.getName() + " needs to move.");
+		}
 	}
 	public void accuseClicked() {
 		JOptionPane.showMessageDialog(null, "you clicked accuse");

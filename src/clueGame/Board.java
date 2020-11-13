@@ -58,10 +58,10 @@ public class Board extends JPanel{
 		super.paintComponent(g);
 		//remove anything presently on the board component
 		removeAll();
-		//set the background to black
+
 		if(getMouseListeners().length > 0) removeMouseListener(mouseListener);
 		addMouseListener(mouseListener);
-		
+		//set the background to black
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		//add all board cells, create label objects if the cell is a room object (easier/smarter to add from here to prevent overlap issues)
