@@ -56,6 +56,10 @@ public abstract class Player {
 	public int[] getStartingLocation() {
 		return startingLocation;
 	}
+	public void setPosition(int row, int col) {
+		this.row = row;
+		this.col = col;
+	}
 	public int[] getPosition() {
 		int[] pos = {this.row, this.col};
 		return pos;

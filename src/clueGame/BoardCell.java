@@ -77,6 +77,7 @@ public class BoardCell{
 			return;
 		}
 		Rectangle rect = new Rectangle(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
+		
 		//Add rect to g?
 		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
 		//g.fillRect(col*width/cols, row*height/rows, 3, 3);

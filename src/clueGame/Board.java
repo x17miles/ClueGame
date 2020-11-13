@@ -1,8 +1,12 @@
 package clueGame;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Font;
 import java.awt.Graphics;
+import java.awt.Rectangle;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.PrintWriter;
@@ -28,6 +32,7 @@ public class Board extends JPanel{
 	private Set<Card> dealableCards;
 	private Solution solution;
 	private static Board theInstance = new Board();
+	private MouseListenerClass mouseListener = new MouseListenerClass();
 	
 	//Singleton Design Pattern
 	private Board() {
@@ -54,6 +59,9 @@ public class Board extends JPanel{
 		//remove anything presently on the board component
 		removeAll();
 		//set the background to black
+		if(getMouseListeners().length > 0) removeMouseListener(mouseListener);
+		addMouseListener(mouseListener);
+		
 		g.setColor(Color.black);
 		g.fillRect(0, 0, getWidth(), getHeight());
 		//add all board cells, create label objects if the cell is a room object (easier/smarter to add from here to prevent overlap issues)
@@ -63,9 +71,14 @@ public class Board extends JPanel{
 				if(j.isLabel()) {
 					JLabel label = new JLabel(roomMap.get(j.getInitial()).getName());
 					label.setBounds(j.getPosition()[1]*getWidth()/numColumns, j.getPosition()[0]*getHeight()/numRows, 150, getHeight()/numRows);
+					
 					//white text, maroon background, centered text
 					label.setForeground(Color.WHITE);
-					label.setBackground(new Color(128,0,0));
+					if(targets.contains(roomMap.get(j.getInitial()).getCenterCell())) {
+						label.setBackground(Color.CYAN);
+					} else {
+						label.setBackground(new Color(128,0,0));
+					}
 					label.setOpaque(true);
 					label.setHorizontalAlignment(SwingConstants.CENTER);
 					label.setVerticalAlignment(SwingConstants.CENTER);
@@ -80,6 +93,43 @@ public class Board extends JPanel{
 		}
 		//after adding everything, run a quick revalidation
 		revalidate();
+	}
+	private class MouseListenerClass implements MouseListener{
+
+		@Override
+		public void mouseClicked(MouseEvent e) {
+			// TODO Auto-generated method stub
+			e.getX();
+			e.getY();
+			ClueGame.getInstance().cellClicked(Board.getInstance().getCell(e.getY()/(getHeight()/numRows), e.getX()/(getWidth()/numColumns)));
+		}
+
+		@Override
+		public void mousePressed(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseReleased(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseEntered(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+
+		@Override
+		public void mouseExited(MouseEvent e) {
+			// TODO Auto-generated method stub
+			
+		}
+	}
+	public void addObjToBoard(Component rect) {
+		add(rect);
 	}
 	
 	public ArrayList<Player> getPlayerOrder(){

@@ -1,5 +1,8 @@
 package clueGame;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+
 import javax.swing.*;
 import javax.swing.border.*;
 
@@ -32,7 +35,9 @@ public class GameControlPanel extends JPanel{
 		rollAmount = new JTextField(5);
 		rollAmount.setEditable(false);
 		accuse = new JButton("Make Accusation");
+		accuse.addActionListener(new AccuseListener());
 		next = new JButton("NEXT!");
+		next.addActionListener(new NextListener());
 		guess = new JTextField(20);
 		guess.setEditable(false);
 		guessResult = new JTextField(20);
@@ -89,6 +94,24 @@ public class GameControlPanel extends JPanel{
 		panel.add(panel1);
 		panel.add(panel2);
 		return panel;
+	}
+	private class NextListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			ClueGame.getInstance().nextClicked();
+		}
+		
+	}
+	private class AccuseListener implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			ClueGame.getInstance().accuseClicked();
+		}
+		
 	}
 	
 	public static void main(String[] args) {
