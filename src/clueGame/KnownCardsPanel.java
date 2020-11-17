@@ -11,6 +11,7 @@ public class KnownCardsPanel extends JPanel{
 	private ArrayList<Card> hand,seen;
 	private ArrayList<JTextField> people,rooms,weaons;
 	private JPanel mainPanel;
+	
 	public void setPlayer(Player p) {
 		this.player = p;
 		hand = player.getHand();

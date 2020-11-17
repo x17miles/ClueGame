@@ -1,15 +1,24 @@
 package clueGame;
 
 import java.awt.BorderLayout;
+import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.*;
 
+import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 import org.hamcrest.core.IsInstanceOf;
 
 public class ClueGame extends JFrame{
 	private static ClueGame theInstance = new ClueGame();
+	private boolean win;
+	private boolean dead;
 	private Board board;
 	private KnownCardsPanel cardPanel;
 	private GameControlPanel controlPanel;
@@ -93,6 +102,7 @@ public class ClueGame extends JFrame{
 				if(board.getTargets().contains(board.getRoom(cell).getCenterCell())) {
 					BoardCell centerCell = board.getRoom(cell).getCenterCell();
 					currPlayer.setPosition(centerCell.getPosition()[0], centerCell.getPosition()[1]);
+					handleSuggestion(board.getRoom(cell));
 				}
 				moved = true;
 				if(cell.isRoomCenter()) {
@@ -113,12 +123,56 @@ public class ClueGame extends JFrame{
 	}
 	public void handleSuggestion(Room room) {
 		// player must craft a suggestion, currently blocked by a message
+		Solution suggestion;
 		if(currPlayer.getName().equals("Jimbothy")) {
-			JOptionPane.showMessageDialog(null,"You need to make a suggestion");
+			JPanel suggestionPanel = new JPanel();
+			suggestionPanel.setLayout(new GridLayout(3,2));
+			JLabel currRoom = new JLabel("Current Room");
+			JTextField roomText = new JTextField(room.getName());
+			roomText.setEditable(false);
+			JLabel person = new JLabel("Person");
+			JComboBox peopleDrop = new JComboBox();
+			for(Card i : board.getDeckType(CardType.PERSON)) {
+				peopleDrop.addItem(i.getName());
+			}
+			//peopleDrop.addActionListener(new ComboActionListener());
+			JLabel weapon = new JLabel("Weapon");
+			JComboBox weaponDrop = new JComboBox();
+			for(Card i : board.getDeckType(CardType.WEAPON)) {
+				weaponDrop.addItem(i.getName());
+			}
+			suggestionPanel.add(currRoom);
+			suggestionPanel.add(roomText);
+			suggestionPanel.add(person);
+			suggestionPanel.add(peopleDrop);
+			suggestionPanel.add(weapon);
+			suggestionPanel.add(weaponDrop);
+			JOptionPane.showMessageDialog(null, suggestionPanel);
+			//JOptionPane.showMessageDialog(null, weaponDrop.getSelectedItem().toString());
+			suggestion = new Solution(board.getDeckCard(peopleDrop.getSelectedItem().toString()), board.getDeckCard(room.getName()), board.getDeckCard(weaponDrop.getSelectedItem().toString())) ;
+			//JOptionPane.showMessageDialog(null,"You need to make a suggestion");
+			//JOptionPane.showConfirmDialog(null, "Message");
+		} else {
+			suggestion = currPlayer.createSuggestion(room);
+			
 		}
-		Solution suggestion = currPlayer.createSuggestion(room);
-		board.handleSuggestion(suggestion, currPlayer);
+		Card disproof = board.handleSuggestion(suggestion, currPlayer);
+		if(currPlayer.getName().equals("Jimbothy")) {
+			JOptionPane.showMessageDialog(null, "Your suggestion was disproved with card: " + disproof.getName());
+			this.cardPanel.setPlayer(currPlayer);
+		}
+
 		suggestionFlag = true;
+	}
+	private class ComboActionListener implements ActionListener {
+		Card selectedCard;
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			// TODO Auto-generated method stub
+			JComboBox cb = (JComboBox)e.getSource();
+			this.selectedCard = board.getDeckCard((String)cb.getSelectedItem());
+		}
+		
 	}
 	
 	public void nextClicked() {
@@ -139,7 +193,43 @@ public class ClueGame extends JFrame{
 	}
 	public void accuseClicked() {
 		//stubbed w/ error message for now
-		JOptionPane.showMessageDialog(null, "you clicked accuse");
+		Solution suggestion;
+		JPanel suggestionPanel = new JPanel();
+		suggestionPanel.setLayout(new GridLayout(3,2));
+		JLabel currRoom = new JLabel("Current Room");
+		JComboBox roomDrop = new JComboBox();
+		for(Card i : board.getDeckType(CardType.ROOM)) {
+			roomDrop.addItem(i.getName());
+		}
+		
+		JLabel person = new JLabel("Person");
+		JComboBox peopleDrop = new JComboBox();
+		for(Card i : board.getDeckType(CardType.PERSON)) {
+			peopleDrop.addItem(i.getName());
+		}
+		//peopleDrop.addActionListener(new ComboActionListener());
+		JLabel weapon = new JLabel("Weapon");
+		JComboBox weaponDrop = new JComboBox();
+		for(Card i : board.getDeckType(CardType.WEAPON)) {
+			weaponDrop.addItem(i.getName());
+		}
+		suggestionPanel.add(currRoom);
+		suggestionPanel.add(roomDrop);
+		suggestionPanel.add(person);
+		suggestionPanel.add(peopleDrop);
+		suggestionPanel.add(weapon);
+		suggestionPanel.add(weaponDrop);
+		JOptionPane.showMessageDialog(null, suggestionPanel);
+		
+		suggestion = new Solution(board.getDeckCard(peopleDrop.getSelectedItem().toString()), board.getDeckCard(roomDrop.getSelectedItem().toString()), board.getDeckCard(weaponDrop.getSelectedItem().toString())) ;
+		boolean result = board.checkAccusation(suggestion);
+		if(result) {
+			JOptionPane.showMessageDialog(null, "You Win!!! :)");
+			win=true;
+		} else {
+			JOptionPane.showMessageDialog(null, "You Lose! :(" );
+			dead = true;
+		}
 	}
 	
 	

@@ -53,6 +53,15 @@ public class Board extends JPanel{
 			
 		}
 	}
+	public ArrayList<Card> getDeckType(CardType type){
+		ArrayList<Card> typeDeck = new ArrayList<Card>();
+		for(Card i : deck) {
+			if(i.getType() == type) {
+				typeDeck.add(i);
+			}
+		}
+		return typeDeck;
+	}
 	
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -165,6 +174,8 @@ public class Board extends JPanel{
 			//if the player has a card that is in the suggestion, return the card
 			for(Card c: orderedPlayers.get(i).getHand()) {
 				if(suggestionCards.contains(c)) {
+					if(!p.getHand().contains(c) && !p.getSeen().contains(c)) p.updateSeen(c);
+					
 					return c;
 				}
 			}
