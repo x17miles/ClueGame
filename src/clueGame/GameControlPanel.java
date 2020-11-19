@@ -38,7 +38,7 @@ public class GameControlPanel extends JPanel{
 		accuse.addActionListener(new AccuseListener());
 		next = new JButton("NEXT!");
 		next.addActionListener(new NextListener());
-		guess = new JTextField(20);
+		guess = new JTextField(30);
 		guess.setEditable(false);
 		guessResult = new JTextField(20);
 		guessResult.setEditable(false);

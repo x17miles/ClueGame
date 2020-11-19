@@ -14,6 +14,21 @@ public abstract class Player {
 	private ArrayList<Room> visitedRooms;
 	private int row,col;
 	private Room draggedRoom;
+	private Solution accusationReady;
+	private boolean dead;
+	
+	public boolean isDead() {
+		return dead;
+	}
+	public void setDead(boolean dead) {
+		this.dead = dead;
+	}
+	public void setAccusation(Solution accusation) {
+		this.accusationReady = accusation;
+	}
+	public Solution getAccusation() {
+		return this.accusationReady;
+	}
 	
 	public Room getDraggedRoom() {
 		return draggedRoom;
@@ -57,7 +72,7 @@ public abstract class Player {
 	}
 	
 	public void updateSeen(Card seenCard) {
-		seen.add(seenCard);
+		if(!seen.contains(seenCard)) seen.add(seenCard);
 	}
 	public ArrayList<Card> getSeen(){
 		return seen;
