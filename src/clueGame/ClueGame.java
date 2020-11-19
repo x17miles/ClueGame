@@ -65,7 +65,7 @@ public class ClueGame extends JFrame{
 	}
 	
 	public void loadNextPlayer() {
-
+		repaint();
 		//get ordered player list
 		ArrayList<Player> players = board.getPlayerOrder();
 		//set the current player as next in line
@@ -93,12 +93,17 @@ public class ClueGame extends JFrame{
 	public void processComputerTurn() {
 		//get a new target
 		BoardCell target = currPlayer.selectTargets();
+		if(draggedFlag != null && !target.equals(draggedFlag.getCenterCell())) {
+			draggedFlag.removePlayer(currPlayer);
+		}
 		//adjust position
 		currPlayer.setPosition(target.getPosition()[0], target.getPosition()[1]);
 		moved = true;
 		//if a room center, handle the suggestion
 		if(target.isRoomCenter()) {
+			board.getRoom(target).addPlayer(currPlayer);
 			handleSuggestion(board.getRoom(target));
+			
 		}
 		//repaint to show changes
 		repaint();
