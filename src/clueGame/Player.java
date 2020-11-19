@@ -13,6 +13,14 @@ public abstract class Player {
 	private ArrayList<Card> seen;
 	private ArrayList<Room> visitedRooms;
 	private int row,col;
+	private Room draggedRoom;
+	
+	public Room getDraggedRoom() {
+		return draggedRoom;
+	}
+	public void setDraggedRoom(Room draggedRoom) {
+		this.draggedRoom = draggedRoom;
+	}
 	
 	public Player(String name, int[] startingLocation, String color) {
 		super();
@@ -26,9 +34,17 @@ public abstract class Player {
 		this.visitedRooms = new ArrayList<Room>();
 	}
 	public void paint(Graphics g, int width, int height, int cols, int rows) {
+		Board board = Board.getInstance();
+		
 		//add a circle with the player's color at the player's current position
 		g.setColor(getColorType());
-		g.fillOval(col*width/cols, row*height/rows, width/cols -1, height/rows -1);
+		if(board.getRoom(board.getCell(this.row,this.col)).getPlayersInRoom().contains(this)) {
+			int offset = board.getRoom(board.getCell(this.row,this.col)).getPlayersInRoom().indexOf(this);
+			g.fillOval(col*width/cols+offset*width/(2*cols), row*height/rows, width/cols -1, height/rows -1);
+		}
+		else {
+			g.fillOval(col*width/cols, row*height/rows, width/cols -1, height/rows -1);
+		}
 	}
 	
 	public abstract Card disproveSuggestion(Solution suggestion);

@@ -26,6 +26,8 @@ public class ClueGame extends JFrame{
 	private Player currPlayer;
 	private boolean moved;
 	private boolean suggestionFlag;
+	private Room draggedFlag;
+	
 	public static ClueGame getInstance() {
 		return theInstance;
 	}
@@ -63,6 +65,7 @@ public class ClueGame extends JFrame{
 	}
 	
 	public void loadNextPlayer() {
+
 		//get ordered player list
 		ArrayList<Player> players = board.getPlayerOrder();
 		//set the current player as next in line
@@ -72,6 +75,13 @@ public class ClueGame extends JFrame{
 		controlPanel.setTurn(currPlayer, roll);
 		//get new targets from random roll
 		board.calcTargets(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]), roll);
+		if(currPlayer.getDraggedRoom() != null) {
+			board.appendTargets(currPlayer.getDraggedRoom().getCenterCell());
+			this.draggedFlag = currPlayer.getDraggedRoom();
+			currPlayer.setDraggedRoom(null);
+			
+			
+		}
 		//reset turn flags
 		moved = false;
 		suggestionFlag = false;
@@ -98,15 +108,22 @@ public class ClueGame extends JFrame{
 		if(currPlayer.getName().equals("Jimbothy")) {
 			//if the cell is in the target list or in a room in the target list, adjust appropriately
 			if(!moved && (board.getTargets().contains(cell) || board.getTargets().contains(board.getRoom(cell).getCenterCell() ))) {
+				if(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() != 'W') {
+					board.getRoom(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1])).removePlayer(currPlayer);
+				}
 				currPlayer.setPosition(cell.getPosition()[0], cell.getPosition()[1]);
 				if(board.getTargets().contains(board.getRoom(cell).getCenterCell())) {
 					BoardCell centerCell = board.getRoom(cell).getCenterCell();
 					currPlayer.setPosition(centerCell.getPosition()[0], centerCell.getPosition()[1]);
 					handleSuggestion(board.getRoom(cell));
+					board.getRoom(cell).addPlayer(currPlayer);
 				}
 				moved = true;
 				if(cell.isRoomCenter()) {
 					handleSuggestion(board.getRoom(cell));
+				}
+				if(draggedFlag != null) {
+					draggedFlag.removePlayer(currPlayer);
 				}
 			} else {
 				//throw error messages for wrong moves
@@ -163,6 +180,11 @@ public class ClueGame extends JFrame{
 		}
 
 		suggestionFlag = true;
+		//move player
+		board.getPlayer(suggestion.person.getName()).setPosition(room.getCenterCell().getPosition()[0], room.getCenterCell().getPosition()[1]);
+		board.getPlayer(suggestion.person.getName()).setDraggedRoom(room);
+		room.addPlayer(board.getPlayer(suggestion.person.getName()));
+		repaint();
 	}
 	private class ComboActionListener implements ActionListener {
 		Card selectedCard;

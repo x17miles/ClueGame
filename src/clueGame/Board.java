@@ -537,6 +537,10 @@ public class Board extends JPanel{
 		findTargets(startCell, pathlength);
 	}
 	
+	public void appendTargets(BoardCell addedTarget) {
+		this.targets.add(addedTarget);
+	}
+	
 	//private helper function to recursively call add targets
 	private void findTargets(BoardCell startCell, int pathlength) {
 		//iterate through each cell in the current cell's adjList
