@@ -24,6 +24,13 @@ public abstract class Player {
 		this.dead = dead;
 	}
 	public void setAccusation(Solution accusation) {
+		ArrayList<Card> accuseCards = new ArrayList<Card>();
+		accuseCards.add(accusation.person);
+		accuseCards.add(accusation.room);
+		accuseCards.add(accusation.weapon);
+		for(Card c : accuseCards) {
+			if(this.getHand().contains(c) || this.getSeen().contains(c)) return;
+		}
 		this.accusationReady = accusation;
 	}
 	public Solution getAccusation() {

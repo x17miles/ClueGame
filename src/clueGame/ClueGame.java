@@ -29,6 +29,7 @@ public class ClueGame extends JFrame{
 	private boolean suggestionFlag;
 	private Room draggedFlag;
 	
+	//singleton version of game engine
 	public static ClueGame getInstance() {
 		return theInstance;
 	}
@@ -51,7 +52,6 @@ public class ClueGame extends JFrame{
 				this.human = p.getName();
 			}
 		}
-		System.out.println(board.getSolution().person.getName() + " " + board.getSolution().room.getName() + " " + board.getSolution().weapon.getName());
 		
 		//add the board component to the jframe
 		add(board,BorderLayout.CENTER);
@@ -70,31 +70,31 @@ public class ClueGame extends JFrame{
 		add(controlPanel, BorderLayout.SOUTH);
 		board.calcTargets(board.getCell(board.getPlayer(human).getPosition()[0],board.getPlayer(human).getPosition()[1]), rand.nextInt(6)+1);
 	}
-	public void handleAccuseResult() {
-		if(currPlayer.getName().equals(human) || win) {
-			setVisible(false);
-			dispose();
-		} else {
-			currPlayer.setDead(dead);
-		}
-	}
-	
+
 	public void loadNextPlayer() {
 		repaint();
+		//don't play if the player died
 		if(currPlayer.isDead()) {
 			return;
 		}
+		//reset class flags and display text
 		this.win = false;
 		this.dead = false;
 		this.controlPanel.setGuess("No guess so far");
 		this.controlPanel.setGuessResult("No results");
+		
 		//get ordered player list
 		ArrayList<Player> players = board.getPlayerOrder();
+		
 		//set the current player as next in line
 		currPlayer = players.get((players.indexOf(currPlayer) +1 ) % players.size());
+		
+		//random roll
 		int roll = rand.nextInt(6) + 1;
+		
 		//update control panel
 		controlPanel.setTurn(currPlayer, roll);
+		
 		//get new targets from random roll
 		board.calcTargets(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]), roll);
 		if(currPlayer.getDraggedRoom() != null) {
@@ -104,7 +104,7 @@ public class ClueGame extends JFrame{
 			
 			
 		}
-		//reset turn flags
+		//reset turn movement flags
 		moved = false;
 		suggestionFlag = false;
 		if(!currPlayer.getName().equals(human)) {
@@ -126,16 +126,20 @@ public class ClueGame extends JFrame{
 			}
 			this.handleAccuseResult();
 			loadNextPlayer();
+			//if accusation made, return to end turn
 			return;
 		}
+		
 		//get a new target
 		BoardCell target = currPlayer.selectTargets();
 		if(draggedFlag != null && !target.equals(draggedFlag.getCenterCell())) {
 			draggedFlag.removePlayer(currPlayer);
 		}
+		
 		//adjust position
 		currPlayer.setPosition(target.getPosition()[0], target.getPosition()[1]);
 		moved = true;
+		
 		//if a room center, handle the suggestion
 		if(target.isRoomCenter()) {
 			board.getRoom(target).addPlayer(currPlayer);
@@ -145,27 +149,42 @@ public class ClueGame extends JFrame{
 		//repaint to show changes
 		repaint();
 	}
+	
 	public void cellClicked(BoardCell cell) {
 		//it must be human player's turn
 		if(currPlayer.getName().equals(human)) {
+			
 			//if the cell is in the target list or in a room in the target list, adjust appropriately
 			if(!moved && (board.getTargets().contains(cell) || board.getTargets().contains(board.getRoom(cell).getCenterCell() ))) {
+				//remove the occupied tag from the cell the player is currently in
 				board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).setOccupied(false);
+				
+				//Remove player from the occupied room if they were dragged
 				if(draggedFlag != null) {
 					draggedFlag.removePlayer(currPlayer);
 				}
+				
+				//If were in a room, remove them from the room's list of players
 				if(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() != 'W') {
 					board.getRoom(board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1])).removePlayer(currPlayer);
 				}
+				
+				//update their position to the cell they clicked
 				currPlayer.setPosition(cell.getPosition()[0], cell.getPosition()[1]);
+				
+				//if they clicked a cell in a target room, update the position to the center cell of the room
 				if(board.getTargets().contains(board.getRoom(cell).getCenterCell())) {
 					BoardCell centerCell = board.getRoom(cell).getCenterCell();
 					currPlayer.setPosition(centerCell.getPosition()[0], centerCell.getPosition()[1]);
 					handleSuggestion(board.getRoom(cell));
 					board.getRoom(cell).addPlayer(currPlayer);
 				}
+				
+				//set an occupied flag on their current cell and moved flag for the turn
 				board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).setOccupied(true);
 				moved = true;
+				
+				//if they chose a room, handle the suggestion
 				if(cell.isRoomCenter()) {
 					handleSuggestion(board.getRoom(cell));
 				}
@@ -184,9 +203,10 @@ public class ClueGame extends JFrame{
 		repaint();
 	}
 	public void handleSuggestion(Room room) {
-		// player must craft a suggestion, currently blocked by a message
+		// player must craft a suggestion
 		Solution suggestion;
 		if(currPlayer.getName().equals(human)) {
+			//make a panel for making a suggestion
 			JPanel suggestionPanel = new JPanel();
 			suggestionPanel.setLayout(new GridLayout(3,2));
 			JLabel currRoom = new JLabel("Current Room");
@@ -209,20 +229,29 @@ public class ClueGame extends JFrame{
 			suggestionPanel.add(peopleDrop);
 			suggestionPanel.add(weapon);
 			suggestionPanel.add(weaponDrop);
+			
+			//a suggestion should be forced, only allow clicking the ok button
 			JOptionPane.showMessageDialog(null, suggestionPanel);
-			//JOptionPane.showMessageDialog(null, weaponDrop.getSelectedItem().toString());
+			
+			//make a suggestion from the result
 			suggestion = new Solution(board.getDeckCard(peopleDrop.getSelectedItem().toString()), board.getDeckCard(room.getName()), board.getDeckCard(weaponDrop.getSelectedItem().toString())) ;
-			//JOptionPane.showMessageDialog(null,"You need to make a suggestion");
-			//JOptionPane.showConfirmDialog(null, "Message");
+			
+			
 		} else {
+			//if computer player, run ai suggestion
 			suggestion = currPlayer.createSuggestion(room);
 			
 		}
+		
+		//get disproof if it exists
 		Card disproof = board.handleSuggestion(suggestion, currPlayer);
-		//currPlayer.updateSeen(disproof);
+		
+		//reprint card panel as applicable
 		if(currPlayer.getName().equals(human)) {
 			this.cardPanel.setPlayer(currPlayer);
 		}
+		
+		//print guess result
 		this.controlPanel.setGuess(suggestion.person.getName() +  " in the " + suggestion.room.getName() + " with the " + suggestion.weapon.getName());
 		if (disproof != null) {
 			if(currPlayer.getName().equals(human)) {
@@ -237,7 +266,8 @@ public class ClueGame extends JFrame{
 		}
 
 		suggestionFlag = true;
-		//move player
+		
+		//move player of suggestion
 		if(!currPlayer.getName().equals(suggestion.person.getName())){
 			board.getPlayer(suggestion.person.getName()).setPosition(room.getCenterCell().getPosition()[0], room.getCenterCell().getPosition()[1]);
 			board.getPlayer(suggestion.person.getName()).setDraggedRoom(room);
@@ -245,17 +275,7 @@ public class ClueGame extends JFrame{
 		}
 		repaint();
 	}
-	private class ComboActionListener implements ActionListener {
-		Card selectedCard;
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			JComboBox cb = (JComboBox)e.getSource();
-			this.selectedCard = board.getDeckCard((String)cb.getSelectedItem());
-		}
 		
-	}
-	
 	public void nextClicked() {
 		//make sure they have moved
 		if(this.moved) {
@@ -265,21 +285,27 @@ public class ClueGame extends JFrame{
 			} else if (board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).getInitial() == 'W') {
 				loadNextPlayer();
 			} else {
+				
 		//throw appropriate error messages
 				if(!currPlayer.isDead()) JOptionPane.showMessageDialog(null,"A suggestion needs to be made");
 			}
 		} else if(!currPlayer.isDead()) {
 			 JOptionPane.showMessageDialog(null, currPlayer.getName() + " needs to move.");
 		} else if(currPlayer.isDead()) {
+			//if they are dead, move on
 			loadNextPlayer();
 		}
 	}
+	
+	
 	public void accuseClicked() {
-		//stubbed w/ error message for now
+		//if not player's turn, they cannot click accuse
 		if(!currPlayer.getName().equals(human)) {
 			JOptionPane.showMessageDialog(null, "It's not your turn.");
 			return;
 		}
+		
+		//otherwise, make a suggestion via dropdown dialog
 		Solution suggestion;
 		JPanel suggestionPanel = new JPanel();
 		suggestionPanel.setLayout(new GridLayout(3,2));
@@ -294,7 +320,6 @@ public class ClueGame extends JFrame{
 		for(Card i : board.getDeckType(CardType.PERSON)) {
 			peopleDrop.addItem(i.getName());
 		}
-		//peopleDrop.addActionListener(new ComboActionListener());
 		JLabel weapon = new JLabel("Weapon");
 		JComboBox weaponDrop = new JComboBox();
 		for(Card i : board.getDeckType(CardType.WEAPON)) {
@@ -308,8 +333,11 @@ public class ClueGame extends JFrame{
 		suggestionPanel.add(weaponDrop);
 		JOptionPane.showMessageDialog(null, suggestionPanel);
 		
+		//extract the suggestion from the dialog
 		suggestion = new Solution(board.getDeckCard(peopleDrop.getSelectedItem().toString()), board.getDeckCard(roomDrop.getSelectedItem().toString()), board.getDeckCard(weaponDrop.getSelectedItem().toString())) ;
 		boolean result = board.checkAccusation(suggestion);
+		
+		//handle result
 		if(result) {
 			JOptionPane.showMessageDialog(null, "You Win!!! :)");
 			win=true;
@@ -318,6 +346,15 @@ public class ClueGame extends JFrame{
 			dead = true;
 		}
 		handleAccuseResult();
+	}
+	
+	public void handleAccuseResult() {
+		if(currPlayer.getName().equals(human) || win) {
+			setVisible(false);
+			dispose();
+		} else {
+			currPlayer.setDead(dead);
+		}
 	}
 	
 	
