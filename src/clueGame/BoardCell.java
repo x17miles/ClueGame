@@ -43,16 +43,6 @@ public class BoardCell{
 		doorDirection = DoorDirection.NONE;
 	}
 	
-	private class CellListener implements ActionListener{
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			// TODO Auto-generated method stub
-			
-		}
-		
-	}
-	
 	public void paint(Graphics g, int width, int height, int cols, int rows) {
 //		if(initial == 'W') {
 //			g.setColor(Color.RED);
@@ -76,7 +66,6 @@ public class BoardCell{
 			g.fillRect(col*width/cols, row*height/rows, width/cols+1, height/rows+1);
 			return;
 		}
-		Rectangle rect = new Rectangle(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
 		
 		//Add rect to g?
 		g.fillRect(col*width/cols, row*height/rows, width/cols-1, height/rows-1);
