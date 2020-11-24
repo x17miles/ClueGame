@@ -16,6 +16,7 @@ import javax.swing.JTextField;
 import org.hamcrest.core.IsInstanceOf;
 
 public class ClueGame extends JFrame{
+	private String human;
 	private static ClueGame theInstance = new ClueGame();
 	private boolean win;
 	private boolean dead;
@@ -45,26 +46,32 @@ public class ClueGame extends JFrame{
 		this.board.setConfigFiles("ClueLayout.csv", "ClueSetup.txt");
 		this.board.initialize();
 		this.board.deal();
+		for(Player p : board.getPlayers()) {
+			if(p instanceof HumanPlayer) {
+				this.human = p.getName();
+			}
+		}
+		System.out.println(board.getSolution().person.getName() + " " + board.getSolution().room.getName() + " " + board.getSolution().weapon.getName());
 		
 		//add the board component to the jframe
 		add(board,BorderLayout.CENTER);
 		
 		//add the cards component to the jframe, set the player to the human player
 		this.cardPanel = new KnownCardsPanel();
-		cardPanel.setPlayer(board.getPlayer("Jimbothy"));
-		this.currPlayer = board.getPlayer("Jimbothy");
+		cardPanel.setPlayer(board.getPlayer(human));
+		this.currPlayer = board.getPlayer(human);
 		add(cardPanel,BorderLayout.EAST);
 		
 		//add the control panel component to the jframe, initialize it with the human player
 		this.controlPanel = new GameControlPanel();
-		controlPanel.setTurn(board.getPlayer("Jimbothy"), rand.nextInt(6)+1);
+		controlPanel.setTurn(board.getPlayer(human), rand.nextInt(6)+1);
 		controlPanel.setGuess("I have no guess");
 		controlPanel.setGuessResult("Nothing");
 		add(controlPanel, BorderLayout.SOUTH);
-		board.calcTargets(board.getCell(board.getPlayer("Jimbothy").getPosition()[0],board.getPlayer("Jimbothy").getPosition()[1]), rand.nextInt(6)+1);
+		board.calcTargets(board.getCell(board.getPlayer(human).getPosition()[0],board.getPlayer(human).getPosition()[1]), rand.nextInt(6)+1);
 	}
 	public void handleAccuseResult() {
-		if(currPlayer.getName().equals("Jimbothy") || win) {
+		if(currPlayer.getName().equals(human) || win) {
 			setVisible(false);
 			dispose();
 		} else {
@@ -100,7 +107,7 @@ public class ClueGame extends JFrame{
 		//reset turn flags
 		moved = false;
 		suggestionFlag = false;
-		if(!currPlayer.getName().equals("Jimbothy")) {
+		if(!currPlayer.getName().equals(human)) {
 			//run through automated turn if computer
 			processComputerTurn();
 		}
@@ -140,7 +147,7 @@ public class ClueGame extends JFrame{
 	}
 	public void cellClicked(BoardCell cell) {
 		//it must be human player's turn
-		if(currPlayer.getName().equals("Jimbothy")) {
+		if(currPlayer.getName().equals(human)) {
 			//if the cell is in the target list or in a room in the target list, adjust appropriately
 			if(!moved && (board.getTargets().contains(cell) || board.getTargets().contains(board.getRoom(cell).getCenterCell() ))) {
 				board.getCell(currPlayer.getPosition()[0], currPlayer.getPosition()[1]).setOccupied(false);
@@ -179,7 +186,7 @@ public class ClueGame extends JFrame{
 	public void handleSuggestion(Room room) {
 		// player must craft a suggestion, currently blocked by a message
 		Solution suggestion;
-		if(currPlayer.getName().equals("Jimbothy")) {
+		if(currPlayer.getName().equals(human)) {
 			JPanel suggestionPanel = new JPanel();
 			suggestionPanel.setLayout(new GridLayout(3,2));
 			JLabel currRoom = new JLabel("Current Room");
@@ -213,12 +220,12 @@ public class ClueGame extends JFrame{
 		}
 		Card disproof = board.handleSuggestion(suggestion, currPlayer);
 		//currPlayer.updateSeen(disproof);
-		if(currPlayer.getName().equals("Jimbothy")) {
+		if(currPlayer.getName().equals(human)) {
 			this.cardPanel.setPlayer(currPlayer);
 		}
 		this.controlPanel.setGuess(suggestion.person.getName() +  " in the " + suggestion.room.getName() + " with the " + suggestion.weapon.getName());
 		if (disproof != null) {
-			if(currPlayer.getName().equals("Jimbothy")) {
+			if(currPlayer.getName().equals(human)) {
 				this.controlPanel.setGuessResult(board.getCardOwner(disproof.getName()).getName() + " disproved with card: " + disproof.getName());
 			} else {
 				this.controlPanel.setGuessResult(board.getCardOwner(disproof.getName()).getName() + " proved this false");
@@ -231,9 +238,11 @@ public class ClueGame extends JFrame{
 
 		suggestionFlag = true;
 		//move player
-		board.getPlayer(suggestion.person.getName()).setPosition(room.getCenterCell().getPosition()[0], room.getCenterCell().getPosition()[1]);
-		board.getPlayer(suggestion.person.getName()).setDraggedRoom(room);
-		room.addPlayer(board.getPlayer(suggestion.person.getName()));
+		if(!currPlayer.getName().equals(suggestion.person.getName())){
+			board.getPlayer(suggestion.person.getName()).setPosition(room.getCenterCell().getPosition()[0], room.getCenterCell().getPosition()[1]);
+			board.getPlayer(suggestion.person.getName()).setDraggedRoom(room);
+			room.addPlayer(board.getPlayer(suggestion.person.getName()));
+		}
 		repaint();
 	}
 	private class ComboActionListener implements ActionListener {
@@ -267,7 +276,7 @@ public class ClueGame extends JFrame{
 	}
 	public void accuseClicked() {
 		//stubbed w/ error message for now
-		if(!currPlayer.getName().equals("Jimbothy")) {
+		if(!currPlayer.getName().equals(human)) {
 			JOptionPane.showMessageDialog(null, "It's not your turn.");
 			return;
 		}

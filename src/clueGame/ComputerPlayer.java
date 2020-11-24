@@ -23,11 +23,11 @@ public class ComputerPlayer extends Player {
 		boolean personFound = false;
 		boolean weaponFound = false;
 		for(Card i : board.getDeck()) {
-			if(i.getType() == CardType.PERSON && !this.getSeen().contains(i)) {
+			if(i.getType() == CardType.PERSON && !this.getSeen().contains(i) && !this.getHand().contains(i)) {
 				unseenPeople.add(i);
 				personFound = true;
 				
-			} else if (i.getType() == CardType.WEAPON && !this.getSeen().contains(i)) {
+			} else if (i.getType() == CardType.WEAPON && !this.getSeen().contains(i) && !this.getHand().contains(i)) {
 				unseenWeapons.add(i);
 				weaponFound = true;
 			}

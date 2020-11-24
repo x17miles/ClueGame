@@ -159,6 +159,7 @@ public class Board extends JPanel{
 	
 	public Card handleSuggestion(Solution suggestion, Player p) {
 		//create an iterable list of the cards in the suggestion
+		if( suggestion.equals(solution)) return null;
 		ArrayList<Card> suggestionCards = new ArrayList<Card>();
 		suggestionCards.add(suggestion.person);
 		suggestionCards.add(suggestion.room);
